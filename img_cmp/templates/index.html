@@ -1,0 +1,84 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse">
+    <form class="form-inline">
+      <label class="my-1 mr-2">Img1</label>
+      <select class="custom-select my-1 mr-sm-2" id="img1_platform">
+        <option selected value="IOS">Platform</option>
+        <option value="IOS">IOS</option>
+        <option value="Android">Android</option>
+      </select>
+
+      <select class="custom-select my-1 mr-sm-2" id="ima1_version">
+        <option selected>Version</option>
+        <option value="1.2.1">1.2.1</option>
+        <option value="2.0.1">1.2.2</option>
+      </select>
+
+      <label class="my-1 mr-2">Img2</label>
+      <select class="custom-select my-1 mr-sm-2" id="img2_platform">
+        <option selected value="IOS">Platform</option>
+        <option value="IOS">IOS</option>
+        <option value="Android">Android</option>
+      </select>
+
+      <select class="custom-select my-1 mr-sm-2" id="ima2_version">
+        <option selected>Version</option>
+        <option value="1.2.1">1.2.1</option>
+        <option value="2.0.1">1.2.2</option>
+      </select>
+
+      <select class="custom-select my-1 mr-sm-2" id="resolution">
+        <option selected>Resolution</option>
+        <option value="1.2.1">920x480</option>
+        <option value="2.0.1">720x1080</option>
+      </select>
+      <button type="submit" class="btn btn-primary my-1">Submit</button>
+    </form>
+  </div>
+  <form class="form-inline my-lg-0">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal">打分</button>
+  </form>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gradeModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="/url/to/submit/" method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          {% buttons %}
+          <button type="submit" class="btn btn-primary">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{# Read the documentation for more information #}
