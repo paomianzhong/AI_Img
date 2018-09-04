@@ -12,37 +12,40 @@
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="collapse navbar-collapse">
-    <form class="form-inline">
+    <form class="form-inline" method="get">
       <label class="my-1 mr-2">Img1</label>
-      <select class="custom-select my-1 mr-sm-2" id="img1_platform">
-        <option selected value="IOS">Platform</option>
+      <select class="custom-select my-1 mr-sm-2" name="img1_platform">
+        <option selected value="IOS">{{ selected.0 }}</option>
         <option value="IOS">IOS</option>
         <option value="Android">Android</option>
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" id="ima1_version">
-        <option selected>Version</option>
-        <option value="1.2.1">1.2.1</option>
-        <option value="2.0.1">1.2.2</option>
+      <select class="custom-select my-1 mr-sm-2" name="img1_version">
+        <option selected>{{ selected.1 }}</option>
+        {% for v in versions %}
+        <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
       </select>
 
       <label class="my-1 mr-2">Img2</label>
-      <select class="custom-select my-1 mr-sm-2" id="img2_platform">
-        <option selected value="IOS">Platform</option>
+      <select class="custom-select my-1 mr-sm-2" name="img2_platform">
+        <option selected value="IOS">{{ selected.2 }}</option>
         <option value="IOS">IOS</option>
         <option value="Android">Android</option>
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" id="ima2_version">
-        <option selected>Version</option>
-        <option value="1.2.1">1.2.1</option>
-        <option value="2.0.1">1.2.2</option>
+      <select class="custom-select my-1 mr-sm-2" name="img2_version">
+        <option selected>{{ selected.3 }}</option>
+        {% for v in versions %}
+        <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" id="resolution">
-        <option selected>Resolution</option>
-        <option value="1.2.1">920x480</option>
-        <option value="2.0.1">720x1080</option>
+      <select class="custom-select my-1 mr-sm-2" name="resolution">
+        <option selected>{{ selected.4 }}</option>
+        {% for r in resolutions %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
       </select>
       <button type="submit" class="btn btn-primary my-1">Submit</button>
     </form>
@@ -53,21 +56,22 @@
 </nav>
 
 <!-- Modal -->
+{% if img2 %}
 <div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="gradeModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="gradeModalLabel">{{ img2.name }}</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form action="/url/to/submit/" method="post" class="form">
+        <form method="post" class="form">
           {% csrf_token %}
           {% bootstrap_form form %}
           {% buttons %}
-          <button type="submit" class="btn btn-primary">
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
             Submit
           </button>
           {% endbuttons %}
@@ -80,5 +84,6 @@
     </div>
   </div>
 </div>
+{% endif %}
 
 {# Read the documentation for more information #}

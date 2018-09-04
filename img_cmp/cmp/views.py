@@ -4,30 +4,38 @@ from django.shortcuts import render
 import json
 from django.shortcuts import render, HttpResponse
 
-from .models import Image
+from .models import Image, Grade
 from .forms import GradeForm
 
 
-def cmp(request, gid=None):
-    # groups = Group.objects.all().order_by('name')
-    # gid = gid or groups[0].id
-    # group = Group.objects.get(id=gid)
-    context = {'groups': groups, 'group': group}
-
-    if request.method == 'POST':
-        start = request.POST['start_time']
-        end = request.POST['end_time']
-        interval = request.POST['interval']
-        # script, div = group.get_chart(start, end)
-        # context = {'groups': groups, 'group': group}
-        # context.update(dict(script=script, div=div))
-        # context.update(dict(gid=gid, s=start, e=end))
-        # return render(request, 'graph.html', context)
-    return render(request, 'graph.html', context)
-
-
-def grade(request):
+def index(request):
     form = GradeForm
     context = {'form': form}
+    choices = Image.category()
+    context.update(choices)
+    selected = ['Platform', 'Version', 'Platform', 'Version', 'Resolution']
+
+    if request.GET:
+        reso = request.GET['resolution']
+        p1, v1 = request.GET['img1_platform'], request.GET['img1_version']
+        p2, v2 = request.GET['img2_platform'], request.GET['img2_version']
+        img1 = Image.objects.get(platform=p1, version=v1, resolution=reso)
+        img2 = Image.objects.get(platform=p2, version=v2, resolution=reso)
+        selected = [p1, v1, p2, v2, reso]
+        context.update({'img1': img1, 'img2': img2})
+
+    if request.POST:
+        data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
+        data['comment'] = request.POST['comment']
+        data['img'] = Image.objects.get(pk=request.POST['img_id'])
+        Grade.objects.create(**data)
+    
+    context['selected'] = selected
     return render(request, 'index.html', context)
+
+
+def grade(request, pid):
+    if request.POST:
+        print(request.POST)
+
 

@@ -7,10 +7,30 @@ class Image(models.Model):
     project = models.CharField(max_length=64)
     platform = models.CharField(max_length=64)
     version = models.CharField(max_length=64)
-    s3_url = models.CharField(max_length=64)
+    resolution = models.CharField(max_length=64)
+    s3_url = models.CharField(max_length=4096)
 
     def __str__(self):
         return self.name
+
+    def next(self):
+        pass
+
+    def previous(self):
+        pass
+
+    @classmethod
+    def category(cls):
+        """
+        获取图片的版本和分辨率种类
+        :return:
+        """
+        versions = cls.objects.values("version")
+        resolutions = cls.objects.values("resolution")
+        ret = {'versions': set([v.get('version') for v in versions]),
+               'resolutions': set([r.get('resolution') for r in resolutions])
+               }
+        return ret
 
 
 class Grade(models.Model):
