@@ -56,6 +56,12 @@
         <option value="{{ r }}">{{ r }}</option>
         {% endfor %}
       </select>
+      <select class="custom-select my-1 mr-sm-2" name="number">
+        <option selected>{{ selected.5 }}</option>
+        {% for r in numbers %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
+      </select>
       <button type="submit" class="btn btn-primary my-1">Submit</button>
     </form>
   </div>
