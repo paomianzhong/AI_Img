@@ -1,0 +1,132 @@
+.cd-image-container {
+    position:relative;
+    display: inline-block;
+    line-height: 0;
+    margin: 0;
+    width: 100vw;
+    max-width: 90vw;
+  }
+  
+  .cd-image-container.bb {
+        width: 100vw !important;
+        max-width: 90vw !important;
+  }
+  
+  .cd-image-container.bb img {
+    display: block;
+    width: 100vw !important;
+  }
+  
+  .cd-image-container img {
+    display: block;
+    width: 90vw;
+  }
+  
+  .cd-image-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    color: #ffffff;
+    padding: 1em;
+    font-size: 1.1vw;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    opacity: 0;
+    -webkit-transform: translateY(1vw);
+    -moz-transform: translateY(1vw);
+    -ms-transform: translateY(1vw);
+    -o-transform: translateY(1vw);
+    transform: translateY(1vw);
+  }
+  .cd-image-label.is-hidden {
+    visibility: hidden;
+  }
+  .is-visible .cd-image-label {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  
+  .cd-resize-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    overflow: hidden;
+    /* Force Hardware Acceleration in WebKit */
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .cd-resize-img img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
+  }
+  .cd-resize-img .cd-image-label {
+    right: auto;
+    left: 0;
+  }
+  .cd-resize-img {
+    width: 50%;
+    /* bounce in animation of the modified image */
+    -webkit-animation: cd-bounce-in 0.4s;
+    -moz-animation: cd-bounce-in 0.4s;
+    animation: cd-bounce-in 0.4s;
+  }
+  
+  .cd-handle {
+    position: absolute;
+    height: 2vw;
+    width: 2vw;
+    /* center the element */
+    left: 50%;
+    top: 50%;
+    margin-left: -1vw;
+    margin-top: -1vw;
+    border-radius: 50%;
+    /*background: #dc717d url("../assets/img/cd-arrows.svg") no-repeat center center;*/
+    cursor: move;
+    box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);*/
+    opacity: 1;
+
+    -webkit-transform: translate3d(0, 0, 0) scale(1);
+    -moz-transform: translate3d(0, 0, 0) scale(1);
+    -ms-transform: translate3d(0, 0, 0) scale(1);
+    -o-transform: translate3d(0, 0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  .cd-first {
+        background: rgba(241,107,89, 0.8);
+      box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.2), 0 0 10px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  .cd-handle.draggable {
+    /* change background color when element is active */
+    /*background-color: #445b7c;*/
+  }
+  .choose button {
+    margin-top: 20px;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    background: #8adaba;
+    padding: 14px 30px;
+    border-style: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  
+  

@@ -8,6 +8,15 @@
 {# Display django.contrib.messages as Bootstrap alerts #}
 {% bootstrap_messages %}
 
+{% block header-content %}
+<link rel="stylesheet" href="/static/css/ImageCompare.css" />
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<script src="/static/js/modernizr.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/ImageCompare.js"></script>
+{{ script|safe }}
+
+{% endblock %}
 
 <!-- Navigation Bar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -85,5 +94,20 @@
   </div>
 </div>
 {% endif %}
+
+<!-- image -->
+
+{% if img2 %}
+<div id="demo">
+  <div data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
+</div>
+{% endif %}
+
+<script>
+	var imageComparisonContainers = $("[data-type='image-comparison']");
+	imageComparisonContainers.each(function(){
+        new ImageCompare($(this));
+    });
+</script>
 
 {# Read the documentation for more information #}
