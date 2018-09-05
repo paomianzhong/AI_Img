@@ -102,10 +102,18 @@
 {% endif %}
 
 <!-- image -->
-
 {% if img2 %}
 <div id="demo">
   <div data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
+</div>
+{% endif %}
+
+<!-- grade -->
+{% if img2 %}
+<div id="grade">
+  {% for g in grades %}
+  <div>{{ g.date }}</div>
+  {% endfor %}
 </div>
 {% endif %}
 

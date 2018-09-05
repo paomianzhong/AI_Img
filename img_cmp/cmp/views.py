@@ -6,6 +6,7 @@ from django.shortcuts import render, HttpResponse
 
 from .models import Image, Grade
 from .forms import GradeForm
+import arrow
 
 
 def index(request):
@@ -29,7 +30,10 @@ def index(request):
         data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
         data['comment'] = request.POST['comment']
         data['img'] = Image.objects.get(pk=request.POST['img_id'])
+        data['date'] = arrow.now().isoformat().split('T')[0]
         Grade.objects.create(**data)
+        grades = Grade.objects.filter(img=data['img'])
+        context.update({'grades': grades})
 
     context['selected'] = selected
     return render(request, 'index.html', context)
@@ -38,5 +42,3 @@ def index(request):
 def grade(request, pid):
     if request.POST:
         print(request.POST)
-
-

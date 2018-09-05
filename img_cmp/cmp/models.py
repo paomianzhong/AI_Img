@@ -1,5 +1,6 @@
 # Create your models here.
 from django.db import models
+import arrow
 
 
 class Image(models.Model):
@@ -35,6 +36,7 @@ class Image(models.Model):
 
 class Grade(models.Model):
     img = models.ForeignKey(Image, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=arrow.now().isoformat().split('T')[0])
     comment = models.CharField(max_length=256)
     dem1 = models.IntegerField(default=0)
     dem2 = models.IntegerField(default=0)
