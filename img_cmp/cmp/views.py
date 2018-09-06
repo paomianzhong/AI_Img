@@ -20,9 +20,9 @@ def index(request):
         reso = request.GET['resolution']
         p1, v1 = request.GET['img1_platform'], request.GET['img1_version']
         p2, v2 = request.GET['img2_platform'], request.GET['img2_version']
-        num = int(request.GET['number'])
-        img1 = Image.objects.filter(platform=p1, version=v1, resolution=reso)[num-1]
-        img2 = Image.objects.filter(platform=p2, version=v2, resolution=reso)[num-1]
+        num = request.GET['number'].zfill(2)
+        img1 = Image.objects.get(platform=p1, version=v1, resolution=reso, name__startswith=num)
+        img2 = Image.objects.get(platform=p2, version=v2, resolution=reso, name__startswith=num)
         selected = [p1, v1, p2, v2, reso, num]
         context.update({'img1': img1, 'img2': img2})
 
