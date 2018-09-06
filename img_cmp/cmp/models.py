@@ -36,9 +36,9 @@ class Image(models.Model):
 
 class Grade(models.Model):
     img = models.ForeignKey(Image, on_delete=models.CASCADE)
-    date = models.DateTimeField(default=arrow.now().isoformat().split('T')[0])
-    comment = models.CharField(max_length=256)
+    date = models.DateTimeField(default=arrow.now().isoformat().split('.')[0])
     dem1 = models.IntegerField(default=0)
     dem2 = models.IntegerField(default=0)
     dem3 = models.IntegerField(default=0)
     dem4 = models.IntegerField(default=0)
+    dem5 = models.IntegerField(default=0)

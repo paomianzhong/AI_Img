@@ -14,8 +14,12 @@
 <script src="/static/js/modernizr.js"></script>
 <script src="/static/js/jquery-2.1.1.js"></script>
 <script src="/static/js/ImageCompare.js"></script>
-{{ script|safe }}
 
+<!-- bootstrap-table -->
+<link href="/static/css/bootstrap-table.css" rel="stylesheet">
+<script src="/static/js/bootstrap-table.js"></script>
+
+{{ script|safe }}
 {% endblock %}
 
 <!-- Navigation Bar -->
@@ -110,10 +114,28 @@
 
 <!-- grade -->
 {% if img2 %}
-<div id="grade">
-  {% for g in grades %}
-  <div>{{ g.date }}</div>
-  {% endfor %}
+<br><br>
+<div class="ibox-content h5" id="statistic">
+    <div class="panel blank-panel modal-body">
+        <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
+            <thead>
+            <tr>
+                <th data-field="date" data-sorttable="true">
+                    <div class="th-inner">时间</div></th>
+                <th data-field="dem1" data-sortable="true">
+                    <div class="th-inner">色调</div></th>
+                <th data-field="dem2" data-sortable="true">
+                    <div class="th-inner">亮度</div></th>
+                <th data-field="dem3" data-sortable="true">
+                    <div class="th-inner">内容</div></th>
+                <th data-field="dem4" data-sortable="true">
+                    <div class="th-inner">噪声</div></th>
+                <th data-field="dem5" data-sortable="true">
+                    <div class="th-inner">纹理</div></th>
+            </tr>
+            </thead>
+        </table>
+    </div>
 </div>
 {% endif %}
 
