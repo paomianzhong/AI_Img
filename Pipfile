@@ -13,6 +13,7 @@ name = "pypi"
 
 django = "*"
 "django-bootstrap4" = "*"
+arrow = "*"
 
 
 [requires]
