@@ -28,9 +28,10 @@
     <form class="form-inline" method="get">
       <label class="my-1 mr-2">Img1</label>
       <select class="custom-select my-1 mr-sm-2" name="img1_platform">
-        <option selected value="IOS">{{ selected.0 }}</option>
+        <option selected>{{ selected.0 }}</option>
         <option value="IOS">IOS</option>
         <option value="Android">Android</option>
+          <option value="Origin">Origin</option>
       </select>
 
       <select class="custom-select my-1 mr-sm-2" name="img1_version">
@@ -42,7 +43,7 @@
 
       <label class="my-1 mr-2">Img2</label>
       <select class="custom-select my-1 mr-sm-2" name="img2_platform">
-        <option selected value="IOS">{{ selected.2 }}</option>
+        <option selected>{{ selected.2 }}</option>
         <option value="IOS">IOS</option>
         <option value="Android">Android</option>
       </select>
@@ -60,18 +61,23 @@
         <option value="{{ r }}">{{ r }}</option>
         {% endfor %}
       </select>
-      <select class="custom-select my-1 mr-sm-2" name="number">
+      <select id="number" class="custom-select my-1 mr-sm-2" name="number">
         <option selected>{{ selected.5 }}</option>
         {% for r in numbers %}
         <option value="{{ r }}">{{ r }}</option>
         {% endfor %}
       </select>
-      <button type="submit" class="btn btn-primary my-1">Submit</button>
+      <button id="new-submit" type="submit" class="btn btn-primary my-1">Submit</button>
     </form>
   </div>
-  <form class="form-inline my-lg-0">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal">打分</button>
-  </form>
+    <form class="form-inline my-lg-0">
+        <button id="button-next" class="btn btn-primary" style="float:right;margin-right:10px;" onclick="change_image('next')">下一张</button>
+        <button id="button-last" class="btn btn-primary" style="float:right;margin-right:10px;" onclick="change_image('last')">上一张</button>
+    </form>
+    <form class="form-inline my-lg-0">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal">打分</button>
+    </form>
+    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
 
 <!-- Modal -->
@@ -107,9 +113,7 @@
 
 <!-- image -->
 {% if img2 %}
-<div id="demo">
-  <div data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
-</div>
+<div id="demo" data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
 {% endif %}
 
 <!-- grade -->
@@ -146,4 +150,38 @@
     });
 </script>
 
+<script>
+    function change_image(txt){
+        var se = document.getElementById("number");
+        var index = se.selectedIndex;
+        var value = se.options[index].value;
+        var all_options = se.options;
+        var next_button = document.getElementById('button-next');
+        var last_button = document.getElementById('button-last');
+        if (txt == 'next'){
+            if (value == '20'){
+                alert("已经是最后一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) + 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }else{
+            if (value == '1' || value == '01'){
+                alert("已经是第一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) - 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }
+        document.forms[1].target="rfFrame";
+    }
+</script>
 {# Read the documentation for more information #}

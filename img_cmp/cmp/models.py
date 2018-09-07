@@ -38,6 +38,11 @@ class Image(models.Model):
                }
         return ret
 
+    @classmethod
+    def get_project(cls):
+        projects = cls.objects.values("project")
+        return set([p.get('project') for p in projects])
+
 
 class Grade(models.Model):
     img = models.ForeignKey(Image, on_delete=models.CASCADE)

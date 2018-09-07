@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 # Create your views here.
 import json
+import arrow
 from django.shortcuts import render, HttpResponse
 
 from .models import Image, Grade
@@ -9,8 +10,9 @@ from .forms import GradeForm
 
 
 def index(request):
-    data = {'hello': 'world'}
-    return HttpResponse(json.dumps(data))
+    projects = Image.get_project()
+    context = {'projects': projects}
+    return render(request, 'index.html', context)
 
 
 def compare(request, project):
@@ -33,6 +35,7 @@ def compare(request, project):
     if request.POST:
         data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
         data['img'] = Image.objects.get(pk=request.POST['img_id'])
+        data['date'] = arrow.arrow.datetime.now()
         Grade.objects.create(**data)
         # grades = Grade.objects.filter(img=data['img'])
         # context.update({'grades': grades})
