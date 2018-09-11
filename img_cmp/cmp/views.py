@@ -20,8 +20,8 @@ def compare(request, project):
     context = {'form': form, 'numbers': list(range(1, 21))}
     choices = Image.category(project)
     context.update(choices)
-    selected1 = ['Platform', 'Version', 'Platform', 'Version', 'Resolution', 'Number']
-    selected2 = ['Version', 'Version', 'Category', 'Number']
+    selected1 = ['Platform', 'Version', 'Platform', 'Version', 'Resolution', '1']
+    selected2 = ['Version', 'Version', 'Category', '1']
     if project == 'AI-case':
         if request.GET:
             reso = request.GET['resolution']
