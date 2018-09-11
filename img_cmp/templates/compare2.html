@@ -1,0 +1,186 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block header-content %}
+<link rel="stylesheet" href="/static/css/ImageCompare.css">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<script src="/static/js/modernizr.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/ImageCompare.js"></script>
+
+<!-- bootstrap-table -->
+<link href="/static/css/bootstrap-table.css" rel="stylesheet">
+<script src="/static/js/bootstrap-table.js"></script>
+
+{{ script|safe }}
+{% endblock %}
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse">
+    <form class="form-inline" method="get">
+      <label class="my-1 mr-2">Img1</label>
+      <select class="custom-select my-1 mr-sm-2" name="img1_version">
+        <option selected>{{ selected.0 }}</option>
+        {% for v in versions %}
+        <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
+      </select>
+
+      <label class="my-1 mr-2">Img2</label>
+      <select class="custom-select my-1 mr-sm-2" name="img2_version">
+        <option selected>{{ selected.1 }}</option>
+        {% for v in versions %}
+        <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
+      </select>
+
+      <select class="custom-select my-1 mr-sm-2" name="category">
+        <option selected>{{ selected.2 }}</option>
+        {% for r in resolutions %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
+      </select>
+      <select id="number" class="custom-select my-1 mr-sm-2" name="number">
+        <option selected>{{ selected.3 }}</option>
+        {% for r in numbers %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
+      </select>
+      <button id="new-submit" type="submit" class="btn btn-primary my-1">Submit</button>
+    </form>
+  </div>
+    <form class="form-inline my-lg-0">
+        <button class="btn btn-primary" style="float:right;margin-right:10px;" onclick="change_image('next')">下一张</button>
+        <button class="btn btn-primary" style="float:right;margin-right:50px;" onclick="change_image('last')">上一张</button>
+    </form>
+    <form class="form-inline my-lg-0">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal" style="background:red;">打分</button>
+    </form>
+    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
+</nav>
+
+<!-- Modal -->
+{% if img2 %}
+<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gradeModalLabel">{{ img2.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          {% buttons %}
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- image -->
+{% if img2 %}
+<div id="demo" data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
+{% endif %}
+
+<!-- grade -->
+{% if img2 %}
+<br><br>
+<div>
+        <table data-toggle="table" data-url="/grade/{{ img1.id }}" >
+            <thead>
+            <tr>
+                <th data-field="dem1" data-sortable="true">
+                    <div class="th-inner">色调</div></th>
+                <th data-field="dem2" data-sortable="true">
+                    <div class="th-inner">亮度</div></th>
+                <th data-field="dem3" data-sortable="true">
+                    <div class="th-inner">内容</div></th>
+                <th data-field="dem4" data-sortable="true">
+                    <div class="th-inner">噪声</div></th>
+                <th data-field="dem5" data-sortable="true">
+                    <div class="th-inner">纹理</div></th>
+            </tr>
+            </thead>
+        </table>
+<br><br>
+        <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
+            <thead>
+            <tr>
+                <th data-field="dem1" data-sortable="true">
+                    <div class="th-inner">色调</div></th>
+                <th data-field="dem2" data-sortable="true">
+                    <div class="th-inner">亮度</div></th>
+                <th data-field="dem3" data-sortable="true">
+                    <div class="th-inner">内容</div></th>
+                <th data-field="dem4" data-sortable="true">
+                    <div class="th-inner">噪声</div></th>
+                <th data-field="dem5" data-sortable="true">
+                    <div class="th-inner">纹理</div></th>
+            </tr>
+            </thead>
+        </table>
+</div>
+<br><br>
+{% endif %}
+
+<script>
+	var imageComparisonContainers = $("[data-type='image-comparison']");
+	imageComparisonContainers.each(function(){
+        new ImageCompare($(this));
+    });
+</script>
+
+<script>
+    function change_image(txt){
+        var se = document.getElementById("number");
+        var index = se.selectedIndex;
+        var value = se.options[index].value;
+        var all_options = se.options;
+        if (txt == 'next'){
+            if (value == '20'){
+                alert("已经是最后一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) + 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }else{
+            if (value == '1' || value == '01'){
+                alert("已经是第一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) - 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }
+        document.forms[1].target="rfFrame";
+    }
+</script>
+{# Read the documentation for more information #}
