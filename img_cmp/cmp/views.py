@@ -73,3 +73,11 @@ def grade(request, pid):
                     "dem4": round(dem4/g_num, 2), "dem5": round(dem5/g_num, 2)})
     data.append(dct)
     return HttpResponse(json.dumps(data))
+
+def insert(request):
+    try:
+        data = request.GET.dict()
+        Image.objects.create(**data)
+        return HttpResponse(json.dumps({'result': 'ok'}))
+    except Exception as e:
+        return HttpResponse(json.dumps({'result': e}))
