@@ -56,10 +56,10 @@ def compare(request, project):
 
 
 def grade(request, pid):
-    dct = {}
     data = []
     g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
     img = Image.objects.get(pk=pid)
+    dct = {"version": img.version}
     grades = Grade.objects.filter(img=img)
     for g in grades:
         g_num += 1
@@ -69,6 +69,7 @@ def grade(request, pid):
         dem4 += g.dem4
         dem5 += g.dem5
     if g_num != 0:
-        dct = {"dem1": dem1/g_num, "dem2": dem2/g_num, "dem3": dem3/g_num, "dem4": dem4/g_num, "dem5": dem5/g_num}
+        dct.update({"dem1": round(dem1/g_num, 2), "dem2": round(dem2/g_num, 2), "dem3": round(dem3/g_num, 2),
+                    "dem4": round(dem4/g_num, 2), "dem5": round(dem5/g_num, 2)})
     data.append(dct)
     return HttpResponse(json.dumps(data))
