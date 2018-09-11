@@ -9,15 +9,11 @@
 {% bootstrap_messages %}
 
 {% block header-content %}
-<link rel="stylesheet" href="/static/css/ImageCompare.css" />
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
+<link rel="stylesheet" href="/static/css/ImageCompare.css">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 <script src="/static/js/modernizr.js"></script>
 <script src="/static/js/jquery-2.1.1.js"></script>
 <script src="/static/js/ImageCompare.js"></script>
-
-<!-- bootstrap-table -->
-<link href="/static/css/bootstrap-table.css" rel="stylesheet">
-<script src="/static/js/bootstrap-table.js"></script>
 
 {{ script|safe }}
 {% endblock %}
@@ -72,75 +68,14 @@
   </div>
     <form class="form-inline my-lg-0">
         <button id="button-next" class="btn btn-primary" style="float:right;margin-right:10px;" onclick="change_image('next')">下一张</button>
-        <button id="button-last" class="btn btn-primary" style="float:right;margin-right:10px;" onclick="change_image('last')">上一张</button>
-    </form>
-    <form class="form-inline my-lg-0">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal">打分</button>
+        <button id="button-last" class="btn btn-primary" style="float:right;margin-right:50px;" onclick="change_image('last')">上一张</button>
     </form>
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
 
-<!-- Modal -->
-{% if img2 %}
-<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="gradeModalLabel">{{ img2.name }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" class="form">
-          {% csrf_token %}
-          {% bootstrap_form form %}
-          {% buttons %}
-          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
-            Submit
-          </button>
-          {% endbuttons %}
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
 <!-- image -->
 {% if img2 %}
 <div id="demo" data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
-{% endif %}
-
-<!-- grade -->
-{% if img2 %}
-<br><br>
-<div class="ibox-content h5" id="statistic">
-    <div class="panel blank-panel modal-body">
-        <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
-            <thead>
-            <tr>
-                <th data-field="date" data-sorttable="true">
-                    <div class="th-inner">时间</div></th>
-                <th data-field="dem1" data-sortable="true">
-                    <div class="th-inner">色调</div></th>
-                <th data-field="dem2" data-sortable="true">
-                    <div class="th-inner">亮度</div></th>
-                <th data-field="dem3" data-sortable="true">
-                    <div class="th-inner">内容</div></th>
-                <th data-field="dem4" data-sortable="true">
-                    <div class="th-inner">噪声</div></th>
-                <th data-field="dem5" data-sortable="true">
-                    <div class="th-inner">纹理</div></th>
-            </tr>
-            </thead>
-        </table>
-    </div>
-</div>
 {% endif %}
 
 <script>
