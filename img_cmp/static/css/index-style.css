@@ -1,0 +1,98 @@
+.filter-head{
+	height: 48px;
+	border: solid 1px #f8d2d1;
+	background-color: #fff6f3;
+	padding: 0 26px;
+	line-height: 48px;
+}
+.index-body {
+    color: #333333;
+    height: auto !important;
+    margin: 70px auto 30px;
+    min-height: 750px;
+    padding-bottom: 20px;
+    width: 980px;
+    border: 1px solid #E7E7E7;
+}
+body{
+    background-color:rgb(250,250,250);
+    background-repeat: repeat;
+}
+#footer {
+    background-color: white;
+    border-top: 1px solid #E7E7E7;
+    color: #ABA498;
+    font-size: 12px;
+    line-height: 50px;
+    margin: 0 auto;
+    text-align: center;
+}
+.platforms-content-platform{
+	border: 1px dashed rgb(204, 204, 204);
+	border-width:0px 0px thin 0px;
+	background: none rgb(255, 255, 255);
+	margin:0 150px;
+	padding-bottom: 10px;
+}
+.platforms-content-platform.platform-height{
+	min-height:150px;
+}
+
+.platforms-content-platform:last-child{
+	border-bottom:0 none;
+	padding-bottom:10px;
+}
+.platforms-content-platform-img{
+	float: left;
+	margin: 5px 0px 20px 0px;
+	width: 105px;
+	height: 105px;
+	/* background:url(../images/preview2.png) no-repeat; */
+}
+img.platforms-content-platform-img.preview{
+	background:url(../images/preview2.png) no-repeat 0 0;
+}
+.platforms-content-platform-title{
+	text-indent: 10px;
+	line-height: 25px;
+	font-size: 16px;
+	font-family: "Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;
+	margin: 25px 0px 35px 115px;
+	color: #1d87d7;
+	font-weight: bold;
+}
+.platforms-content-platform-decription, .platforms-content-rate, .platforms-content-statistics {
+	font-family: "Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 12px;
+	line-height: 22px;
+	margin: -30px 0px 31px 125px;
+}
+.platforms-content-platform-decription, .platforms-content-rate, .platforms-content-statistics {
+	font-family: "Microsoft Yahei","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 12px;
+	line-height: 22px;
+	margin: -30px 0px 31px 125px;
+}
+.platforms-content-tags{
+	margin: -30px 0px 0px 120px;
+}
+.attention-num{
+	color: #CC2A1E;
+}
+.abbr-tag{
+	display: inline-block;
+	background-color: #d7ebf7;
+	padding: 0 10px;
+	margin: 4px;
+	border-radius: 4px;
+	color: #147294;
+}
+
+#abbreviation-tag{
+	padding: 10px 20px;
+}
+
+.abbr-tag:hover{
+	text-decoration:none;
+	opacity:0.8;
+}

@@ -74,6 +74,7 @@ def grade(request, pid):
     data.append(dct)
     return HttpResponse(json.dumps(data))
 
+
 def insert(request):
     try:
         data = request.GET.dict()

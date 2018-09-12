@@ -6,7 +6,7 @@ import arrow
 class Image(models.Model):
     name = models.CharField(max_length=64)
     project = models.CharField(max_length=64)
-    platform = models.CharField(max_length=64)
+    platform = models.CharField(max_length=64, default='')
     version = models.CharField(max_length=64)
     resolution = models.CharField(max_length=64)
     s3_url = models.CharField(max_length=4096)
@@ -33,8 +33,10 @@ class Image(models.Model):
         query_set = cls.objects.filter(project=project_name)
         versions = query_set.values("version")
         resolutions = query_set.values("resolution")
+        platforms = query_set.values("platform")
         ret = {'versions': set([v.get('version') for v in versions]),
-               'resolutions': set([r.get('resolution') for r in resolutions])
+               'resolutions': set([r.get('resolution') for r in resolutions]),
+               'platforms': set([p.get('platform') for p in platforms])
                }
         return ret
 
