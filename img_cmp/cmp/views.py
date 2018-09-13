@@ -94,7 +94,7 @@ def upload(request):
     project = request.POST.get('project', '')
     platform = request.POST.get('platform', '')
     version = request.POST.get('version', '')
-    # upfile.downFile(localPath,ks3Path)
+    upfile.downFile(localPath,ks3Path)
     insertdb.insertdb(localPath, project, platform, version, ks3Path)
     context={'localPath':localPath,'ks3Path':ks3Path}
     return render(request,'upload.html',context)
