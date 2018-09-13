@@ -18,5 +18,5 @@ def insertdb(localPath,project,platform,version,ks3Path):
                            'resolution':resolution[i],
                            's3_url':'https://ks3-cn-beijing.ksyun.com/qa-vod/'+ks3Path+'/' + resolution[i] + '/' + file}
                 print(payload)
-                requests.get('http://127.0.0.1:8000/insert',params=payload)
+                requests.get('http://10.100.51.45:8020/insert',params=payload)
 
