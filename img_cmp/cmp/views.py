@@ -8,6 +8,9 @@ from django.shortcuts import render, HttpResponse
 from .models import Image, Grade
 from .forms import GradeForm
 
+from . import upfile
+from . import insertdb
+
 
 def index(request):
     projects = Image.get_project()
