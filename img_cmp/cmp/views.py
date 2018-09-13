@@ -82,3 +82,16 @@ def insert(request):
         return HttpResponse(json.dumps({'result': 'ok'}))
     except Exception as e:
         return HttpResponse(json.dumps({'result': e}))
+
+def upload(request):
+    if request.method == 'GET':
+        return render(request, 'upload.html')
+    localPath=request.POST.get('local_path','')
+    ks3Path=request.POST.get('ks3_path','')
+    project = request.POST.get('project', '')
+    platform = request.POST.get('platform', '')
+    version = request.POST.get('version', '')
+    # upfile.downFile(localPath,ks3Path)
+    insertdb.insertdb(localPath, project, platform, version, ks3Path)
+    context={'localPath':localPath,'ks3Path':ks3Path}
+    return render(request,'upload.html',context)
