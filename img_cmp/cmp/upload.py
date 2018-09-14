@@ -61,7 +61,7 @@ class upload(object):
             return status_code
         file_data = ""
         #file_object = open("/Users/zhangminghui/Documents/AI/test1")
-        file_object = open(self.filePath)
+        file_object = open(self.filePath,'rb')
         try:
             file_data = file_object.read()
         finally:
