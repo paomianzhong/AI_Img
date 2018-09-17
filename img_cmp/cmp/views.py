@@ -4,6 +4,7 @@ from django.shortcuts import render
 import json
 import arrow
 from django.shortcuts import render, HttpResponse
+from django.http import StreamingHttpResponse
 
 from .models import Image, Grade
 from .forms import GradeForm
@@ -98,3 +99,12 @@ def upload(request):
     insertdb.insertdb(localPath, project, platform, version, ks3Path)
     context={'localPath':localPath,'ks3Path':ks3Path}
     return render(request,'upload.html',context)
+
+def export(request):
+    p, v = request.GET['proj'], request.GET['ver']
+    content = Image.export_xls(proj=p, ver=v)
+    response = HttpResponse(content)
+    response['Content-Type'] = 'application/vnd.ms-excel'
+    response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    return response
+
