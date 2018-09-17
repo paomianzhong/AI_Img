@@ -98,54 +98,61 @@
 </div>
 {% endif %}
 
+<!-- grade -->
+{% if img2 %}
+<div>
+    <div class="panel blank-panel modal-body">
+        <table width="70%" align="center">
+            <tr>
+                <td width="35%" style="float: left;margin: 0px;padding: 0px;">
+                    <table data-toggle="table" data-url="/grade/{{ img1.id }}" >
+                        <thead>
+                        <tr>
+                            <th data-field="version">
+                                <div class="th-inner">Img1</div></th>
+                            <th data-field="dem1">
+                                <div class="th-inner">色调</div></th>
+                            <th data-field="dem2">
+                                <div class="th-inner">亮度</div></th>
+                            <th data-field="dem3">
+                                <div class="th-inner">内容</div></th>
+                            <th data-field="dem4">
+                                <div class="th-inner">噪声</div></th>
+                            <th data-field="dem5">
+                                <div class="th-inner">纹理</div></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </td>
+                <td width="35%" style="float: right;margin: 0px;padding: 0px;">
+                    <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
+                        <thead>
+                        <tr>
+                            <th data-field="version">
+                                <div class="th-inner">Img2</div></th>
+                            <th data-field="dem1">
+                                <div class="th-inner">色调</div></th>
+                            <th data-field="dem2">
+                                <div class="th-inner">亮度</div></th>
+                            <th data-field="dem3">
+                                <div class="th-inner">内容</div></th>
+                            <th data-field="dem4">
+                                <div class="th-inner">噪声</div></th>
+                            <th data-field="dem5">
+                                <div class="th-inner">纹理</div></th>
+                        </tr>
+                        </thead>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endif %}
+
 <!-- image -->
 {% if img2 %}
 <div id="demo" data-type="image-comparison" src1="{{ img1.s3_url }}" src2="{{ img2.s3_url }}"></div>
-{% endif %}
-
-<!-- grade -->
-{% if img2 %}
-<br><br>
-<div>
-        <table data-toggle="table" data-url="/grade/{{ img1.id }}" >
-            <thead>
-            <tr>
-                <th data-field="version" data-sortable="true">
-                    <div class="th-inner">Img1</div></th>
-                <th data-field="dem1" data-sortable="true">
-                    <div class="th-inner">色调</div></th>
-                <th data-field="dem2" data-sortable="true">
-                    <div class="th-inner">亮度</div></th>
-                <th data-field="dem3" data-sortable="true">
-                    <div class="th-inner">内容</div></th>
-                <th data-field="dem4" data-sortable="true">
-                    <div class="th-inner">噪声</div></th>
-                <th data-field="dem5" data-sortable="true">
-                    <div class="th-inner">纹理</div></th>
-            </tr>
-            </thead>
-        </table>
-<br><br>
-        <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
-            <thead>
-            <tr>
-                <th data-field="version" data-sortable="true">
-                    <div class="th-inner">Img2</div></th>
-                <th data-field="dem1" data-sortable="true">
-                    <div class="th-inner">色调</div></th>
-                <th data-field="dem2" data-sortable="true">
-                    <div class="th-inner">亮度</div></th>
-                <th data-field="dem3" data-sortable="true">
-                    <div class="th-inner">内容</div></th>
-                <th data-field="dem4" data-sortable="true">
-                    <div class="th-inner">噪声</div></th>
-                <th data-field="dem5" data-sortable="true">
-                    <div class="th-inner">纹理</div></th>
-            </tr>
-            </thead>
-        </table>
-</div>
-<br><br>
 {% endif %}
 
 <script>

@@ -25,9 +25,9 @@
       <label class="my-1 mr-2">Img1</label>
       <select class="custom-select my-1 mr-sm-2" name="img1_platform">
         <option selected>{{ selected.0 }}</option>
-        <option value="IOS">IOS</option>
-        <option value="Android">Android</option>
-          <option value="Origin">Origin</option>
+          {% for p in platforms %}
+        <option value="{{ p }}">{{ p }}</option>
+          {% endfor %}
       </select>
 
       <select class="custom-select my-1 mr-sm-2" name="img1_version">
@@ -40,8 +40,9 @@
       <label class="my-1 mr-2">Img2</label>
       <select class="custom-select my-1 mr-sm-2" name="img2_platform">
         <option selected>{{ selected.2 }}</option>
-        <option value="IOS">IOS</option>
-        <option value="Android">Android</option>
+          {% for p in platforms %}
+        <option value="{{ p }}">{{ p }}</option>
+          {% endfor %}
       </select>
 
       <select class="custom-select my-1 mr-sm-2" name="img2_version">

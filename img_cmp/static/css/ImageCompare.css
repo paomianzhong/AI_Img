@@ -3,9 +3,9 @@
     display: inline-block;
     line-height: 0;
     margin: 0;
-    left: 55;
-    width: 100vw;
-    max-width: 90vw;
+    left: 14.5vw;
+    width: 80vw;
+    max-width: 70vw;
   }
   
   .cd-image-container.bb {
@@ -20,7 +20,7 @@
   
   .cd-image-container img {
     display: block;
-    width: 90vw;
+    width: 70vw;
   }
   
   .cd-image-label {
