@@ -1,6 +1,10 @@
 # Create your models here.
 from django.db import models
+from collections import defaultdict
+from operator import itemgetter, add
+from functools import reduce
 import arrow
+import tablib
 
 
 class Image(models.Model):
@@ -43,6 +47,60 @@ class Image(models.Model):
         projects = cls.objects.values("project")
         return set([p.get('project') for p in projects])
 
+    @classmethod
+    def export_xls(cls):
+        """
+        导出图片打分信息为xls文件
+        :return:
+        """
+        imgs = Image.objects.filter() # TODO
+
+        grade_times = [img.get_grade_times for img in imgs]
+        width = max(grade_times)
+        stats = tablib.Dataset()
+        getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
+        for img in imgs:
+            data = getter(img.get_stats(width=width))
+            row = reduce(add, data)
+            row.insert(0, img.name)
+            stats.append(row)
+        headers = ['名称']
+        for dem in ['对焦', '清晰', '曝光', '颜值']:
+            h = [dem+str(i) for i in (list(range(width))+['avg'])]
+            headers.extend(h)
+        stats.headers = headers
+        print(stats)
+        return stats.export('xls')
+
+    def get_grade_count(self):
+        """
+        获取图片打分的次数
+        :return:
+        """
+        grades = Grade.objects.filter(img=self)
+        return len(grades)
+
+    def get_stats(self, width=0):
+        """
+        获取图片评分的统计信息
+        :return:
+        """
+        stat = defaultdict(list)
+        grades = Grade.objects.filter(img=self)
+        for grade in grades:
+            stat['dem1'].append(grade.dem1)
+            stat['dem2'].append(grade.dem2)
+            stat['dem3'].append(grade.dem3)
+            stat['dem4'].append(grade.dem4)
+            stat['dem5'].append(grade.dem5)
+        for v in stat.values():
+            avg = round(sum(v)/len(v), 2)
+            if width:
+                v.extend(['']*(width-len(v)))
+            v.append(avg)
+
+        return stat
+
 
 class Grade(models.Model):
     img = models.ForeignKey(Image, on_delete=models.CASCADE)
@@ -53,3 +111,20 @@ class Grade(models.Model):
     dem3 = models.IntegerField(default=0)
     dem4 = models.IntegerField(default=0)
     dem5 = models.IntegerField(default=0)
+
+    def get_stats(self, img):
+        stat = defaultdict(list)
+        grades = Grade.objects.filter(img=img)
+        for grade in grades:
+            stat['dem1'].append(grade.dem1)
+            stat['dem2'].append(grade.dem2)
+            stat['dem3'].append(grade.dem3)
+            stat['dem4'].append(grade.dem4)
+            stat['dem5'].append(grade.dem5)
+        for v in stat.values():
+            avg = round(sum(v)/len(v), 2)
+            v.append(avg)
+        return stat
+
+
+
