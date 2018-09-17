@@ -50,14 +50,14 @@ class Image(models.Model):
         return set([p.get('project') for p in projects])
 
     @classmethod
-    def export_xls(cls):
+    def export_xls(cls, proj, ver):
         """
         导出图片打分信息为xls文件
         :return:
         """
-        imgs = Image.objects.filter() # TODO
+        imgs = Image.objects.filter(project=proj, version=ver)
 
-        grade_times = [img.get_grade_times for img in imgs]
+        grade_times = [img.get_grade_times() for img in imgs]
         width = max(grade_times)
         stats = tablib.Dataset()
         getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
@@ -71,10 +71,9 @@ class Image(models.Model):
             h = [dem+str(i) for i in (list(range(width))+['avg'])]
             headers.extend(h)
         stats.headers = headers
-        print(stats)
         return stats.export('xls')
 
-    def get_grade_count(self):
+    def get_grade_times(self):
         """
         获取图片打分的次数
         :return:
@@ -97,10 +96,14 @@ class Image(models.Model):
             stat['dem5'].append(grade.dem5)
         for v in stat.values():
             avg = round(sum(v)/len(v), 2)
-            if width:
-                v.extend(['']*(width-len(v)))
+            v.extend(['']*(width-len(v)))
             v.append(avg)
-
+        if not grades:
+            stat['dem1'].extend(['']*(width+1))
+            stat['dem2'].extend(['']*(width+1))
+            stat['dem3'].extend(['']*(width+1))
+            stat['dem4'].extend(['']*(width+1))
+            stat['dem5'].extend(['']*(width+1))
         return stat
 
 

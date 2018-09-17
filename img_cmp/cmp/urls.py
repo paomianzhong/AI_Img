@@ -8,4 +8,5 @@ urlpatterns = [
     path('upload', views.upload, name='upload'),
     path('<str:project>/', views.compare, name='cmp'),
     path('grade/<int:pid>/', views.grade, name='grade'),
+    path('api/export/', views.export, name='export'),
 ]
