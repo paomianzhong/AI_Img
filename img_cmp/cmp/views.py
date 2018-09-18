@@ -135,7 +135,7 @@ def upload(request):
         version = request.POST.get('version', '')
         # 修改上传目录
         # path = '/Users/zhangminghui/Project/AI_Img/img_cmp/cmp/image_set'
-        path = '/home/eva/AI_Img/img_cmp/image_set'
+        path = '/home/eva/AI_Img/img_cmp/cmp/image_set'
         isExists = os.path.exists(path)
         # 判断结果
         if not isExists:
