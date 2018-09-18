@@ -6,21 +6,25 @@ import os,urllib
 from . import upload
 
 
-'''下载文件'''
-def downFile(localPath,ks3Path):
+def uploadFile(localPath,project,platform,version):
 	resolution = os.listdir(localPath)
 	count = len(resolution)
+	print("project" + project)
 	for i in range(count):
 		file_dir = localPath + '/' + resolution[i]
 		for dirs in os.walk(file_dir):
 			for file in dirs[2]:
 				filePath = localPath + '/' + resolution[i] + '/' + file
 
-				'''上传已下载的文件'''
+				'''上传文件'''
 				rr=upload.upload()
-				rr.objectKey = ks3Path+'/' +file #上传路径
-				print(rr.objectKey)
-				# rr.objectKey = 'xiexiaoli-case/AI-case/test' + '/' + fileName  # 上传路径
+				if platform.strip() == '':
+					# 上传路径
+					rr.objectKey = project + '/' + version+'/' + resolution[i]+'/' + file
+
+				else:
+					rr.objectKey = project + '/' + platform + '/' + version + '/' + resolution[i] + '/' + file  # 上传路径
+				print("KS3路径："+rr.objectKey)
 				rr.filePath = filePath
 				rr.bucket = 'qa-vod' #上传bucket
 				rr.ak = 'AKLTzSNRzrm5QeOAl95nkERhqA'

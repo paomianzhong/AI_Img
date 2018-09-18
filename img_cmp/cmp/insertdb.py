@@ -4,19 +4,28 @@
 import requests
 import os
 
-def insertdb(localPath,project,platform,version,ks3Path):
+def insertdb(localPath,project,platform,version):
     resolution = os.listdir(localPath)
     count = len(resolution)
     for i in range(count):
         file_dir = localPath + '/' + resolution[i]
         for dirs in os.walk(file_dir):
             for file in dirs[2]:
-                payload = {'name':file,
-                           'project':project,
-                           'platform':platform,
-                           'version':version,
-                           'resolution':resolution[i],
-                           's3_url':'https://ks3-cn-beijing.ksyun.com/qa-vod/'+ks3Path+'/' + resolution[i] + '/' + file}
-                print(payload)
-                requests.get('http://10.100.51.45:8020/insert',params=payload)
+                if platform.strip() == '':
+                    payload = {'name': file,
+                               'project': project,
+                               'version': version,
+                               'resolution': resolution[i],
+                               's3_url': 'https://ks3-cn-beijing.ksyun.com/qa-vod/' + project + '/' +
+                                         version+'/' + resolution[i] + '/' + file}
+
+                else:
+                    payload = {'name': file,
+                               'project': project,
+                               'platform': platform,
+                               'version': version,
+                               'resolution': resolution[i],
+                               's3_url': 'https://ks3-cn-beijing.ksyun.com/qa-vod/' + project + '/' + platform + '/' +
+                                         version + '/' + resolution[i] + '/' + file}
+                requests.get('http://10.100.51.45:8020/insert', params=payload)
 
