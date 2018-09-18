@@ -6,16 +6,19 @@
 </head>
 <body>
 <p>批量上传图片并插入信息到数据库</p>
-<form action="upload"  method="post"  >
+<form action="upload"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
-    本地上次文件夹路径（写到分辨率上一层）：<input type="text" name="local_path"> <br>
-    上传到的ks3路径（AI-case/要传到的文件夹）：<input type="text" name="ks3_path"> <br>
-    项目名称（AI-case或Zhaidai-case）：<input type="text" name="project"> <br>
-    平台：<input type="text" name="platform"> <br>
-    版本：<input type="text" name="version"> <br>
-    <input type="submit"  value="提交">
-    </form>
+    项目名称:
+    <input type="radio" name="project" value="AI_Project">AI_Project
+    <input type="radio" name="project" value="Zhaidai_Project">Zhaidai_Project<br>
+    平台(Zhaidai_Project选填)：<input type="radio" name="platform" value="Android">Android
+    <input type="radio" name="platform" value="Android">IOS
+    <input type="radio" name="platform" value="Android">Server<br>
+    版本：<input type="text" name="version"><br>
+    选择要上传的图片版本(例如 版本.zip)：<br>
+    <input type="file" name="myfile"><br>
+    <input type="submit" value="上传">
+</form>
 
-<p>{{version}}</p>
 </body>
 </html>

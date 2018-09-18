@@ -3,6 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 import json
 import arrow
+import zipfile,os,time,shutil
 from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
 
@@ -127,17 +128,47 @@ def insert(request):
 
 
 def upload(request):
-    if request.method == 'GET':
-        return render(request, 'upload.html')
-    localPath=request.POST.get('local_path','')
-    ks3Path=request.POST.get('ks3_path','')
-    project = request.POST.get('project', '')
-    platform = request.POST.get('platform', '')
-    version = request.POST.get('version', '')
-    upfile.downFile(localPath,ks3Path)
-    insertdb.insertdb(localPath, project, platform, version, ks3Path)
-    context={'localPath':localPath,'ks3Path':ks3Path}
-    return render(request,'upload.html',context)
+    if request.POST:
+        project = request.POST.get('project', None)
+        print("project"+project)
+        platform = request.POST.get('platform', '')
+        version = request.POST.get('version', '')
+        # 修改上传目录
+        # path = '/Users/zhangminghui/Project/AI_Img/img_cmp/cmp/image_set'
+        path = '/home/eva/AI_Img/img_cmp/image_set'
+        isExists = os.path.exists(path)
+        # 判断结果
+        if not isExists:
+            os.mkdir(path)
+            print(path + ' 创建成功')
+
+        # 获取上传的文件，如果没有文件，则默认为None
+        File = request.FILES.get("myfile", None)
+        if File is None:
+            return HttpResponse("没有需要上传的文件")
+        else:
+
+            with open("./cmp/image_set/%s" % File.name, 'wb+') as f:
+                # 分块写入文件
+                for chunk in  File.chunks():
+                    f.write(chunk)
+
+            filename = path+'/'+File.name
+            fz = zipfile.ZipFile(filename, 'r')
+            for file in fz.namelist():
+                fz.extract(file, path)
+            base = os.path.basename(filename)
+            zipfilename = os.path.splitext(base)[0]
+            localPath = path+'/' + zipfilename
+            while not os.path.exists(localPath):
+                time.sleep(2)
+            upfile.uploadFile(localPath, project, platform,version)
+            insertdb.insertdb(localPath, project,platform, version)
+            shutil.rmtree(path)
+            return HttpResponse("上传完成!")
+
+    else:
+        return render(request, "upload.html")
 
 
 def export(request):
