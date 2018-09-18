@@ -7,7 +7,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
 
 from .models import Image, Grade
-from .forms import GradeForm
+from .forms import GradeForm, GradeForm2
 
 from . import upfile
 from . import insertdb
@@ -59,6 +59,33 @@ def compare(request, project):
         return render(request, 'compare2.html', context)
 
 
+def compare2(request, project):
+    form = GradeForm2
+    context = {'form': form}
+    versions = Image.get_version(project)
+    context.update({"versions": versions})
+    selected = ['Version', '1']
+    numbers = list(range(1, 21))
+
+    if request.GET:
+        v = request.GET['img_version']
+        imgs = Image.objects.filter(project=project, version=v)
+        numbers = list(range(1, len(imgs) + 1))
+        num = request.GET['number'].zfill(2)
+        img = Image.objects.get(project=project, version=v, name__startswith=num)
+        context.update({'img': img})
+        selected = [v, num]
+
+    if request.POST:
+        data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
+        data['img'] = Image.objects.get(pk=request.POST['img_id'])
+        data['date'] = arrow.arrow.datetime.now()
+        Grade.objects.create(**data)
+
+    context.update({"numbers": numbers, "selected": selected})
+    return render(request, 'compare3.html', context)
+
+
 def grade(request, pid):
     data = []
     g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
@@ -79,6 +106,17 @@ def grade(request, pid):
     return HttpResponse(json.dumps(data))
 
 
+def grade2(request, pid):
+    data = []
+    img = Image.objects.get(pk=pid)
+    grades = Grade.objects.filter(img=img)
+    for g in grades:
+        dct = {}
+        dct.update({"date": g.date.strftime("%Y-%m-%d %H:%M:%S"), "dem1": g.dem1, "dem2": g.dem2, "dem3": g.dem3, "dem4": g.dem4})
+        data.append(dct)
+    return HttpResponse(json.dumps(data))
+
+
 def insert(request):
     try:
         data = request.GET.dict()
@@ -86,6 +124,7 @@ def insert(request):
         return HttpResponse(json.dumps({'result': 'ok'}))
     except Exception as e:
         return HttpResponse(json.dumps({'result': e}))
+
 
 def upload(request):
     if request.method == 'GET':
@@ -99,6 +138,7 @@ def upload(request):
     insertdb.insertdb(localPath, project, platform, version, ks3Path)
     context={'localPath':localPath,'ks3Path':ks3Path}
     return render(request,'upload.html',context)
+
 
 def export(request):
     p, v = request.GET['proj'], request.GET['ver']

@@ -50,6 +50,12 @@ class Image(models.Model):
         return set([p.get('project') for p in projects])
 
     @classmethod
+    def get_version(cls, project_name):
+        query_set = cls.objects.filter(project=project_name)
+        versions = query_set.values("version")
+        return set([v.get('version') for v in versions])
+
+    @classmethod
     def export_xls(cls, proj, ver):
         """
         导出图片打分信息为xls文件

@@ -30,21 +30,32 @@
         <div class="card bg-light mb-3" style="max-width: 18rem;">
             <div class="card-header">{{ project }}</div>
             <div class="card-body">
+                {% if project != 'Test' %}
                 <h5 class="card-title">
-                    <a href="/{{ project }}" class="platform-content-platform-link">{{ project }} Test Link</a>
+                    <a href="/cmp/{{ project }}" class="platform-content-platform-link">{{ project }} Test Link</a>
                 </h5>
                 <div class="platforms-content-platform-img">
-                    <a href="/{{ project }}" class="platforms-content-platform-link">
+                    <a href="/cmp/{{ project }}" class="platforms-content-platform-link">
                         <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
                     </a>
                 </div>
+                {% else %}
+                <h5 class="card-title">
+                    <a href="/new/{{ project }}" class="platform-content-platform-link">{{ project }} Test Link</a>
+                </h5>
+                <div class="platforms-content-platform-img">
+                    <a href="/new/{{ project }}" class="platforms-content-platform-link">
+                        <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
+                    </a>
+                </div>
+                {% endif %}
             </div>
         </div>
-        <br><br>
+        <br>
         <div class="platforms-content-tags">
         </div>
     </div>
-    <br><br>
+    <br>
     {% endfor %}
 
     <div class="platforms-content-platform platform-height">
@@ -61,11 +72,11 @@
                 </div>
             </div>
         </div>
-        <br><br>
+        <br>
         <div class="platforms-content-tags">
         </div>
     </div>
-
+<br>
     <div class="platforms-content-platform platform-height">
         <div class="card bg-light mb-3" style="max-width: 18rem;">
             <div class="card-header">Image Upload</div>
@@ -80,9 +91,8 @@
                 </div>
             </div>
         </div>
-        <br><br>
+        <br>
         <div class="platforms-content-tags">
         </div>
     </div>
-
 </div>
