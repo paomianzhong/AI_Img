@@ -2,22 +2,25 @@
     position:relative;
     display: inline-block;
     line-height: 0;
-    left: 35vw;
-    margin: 2vw;
+    margin: 0;
+    left: 14.5vw;
+    width: 80vw;
+    max-width: 70vw;
   }
   
   .cd-image-container.bb {
-        width: 25vw !important;
-        max-width: 25vw !important;
+        width: 100vw !important;
+        max-width: 90vw !important;
   }
   
   .cd-image-container.bb img {
     display: block;
-    width: 25vw !important;
+    width: 100vw !important;
   }
   
   .cd-image-container img {
     display: block;
+    width: 70vw;
   }
   
   .cd-image-label {
@@ -113,6 +116,17 @@
   .cd-handle.draggable {
     /* change background color when element is active */
     /*background-color: #445b7c;*/
+  }
+  .choose button {
+    margin-top: 20px;
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    background: #8adaba;
+    padding: 14px 30px;
+    border-style: none;
+    border-radius: 5px;
+    cursor: pointer;
   }
 
   
