@@ -134,7 +134,7 @@ def upload(request):
         platform = request.POST.get('platform', '')
         version = request.POST.get('version', '')
         # 修改上传目录
-        # path = '/Users/zhangminghui/Project/AI_Img/img_cmp/cmp/image_set'
+        # path = '/Users/zhangminghui/AI_Img/img_cmp/cmp/image_set'
         path = '/home/eva/AI_Img/img_cmp/cmp/image_set'
         isExists = os.path.exists(path)
         # 判断结果
@@ -162,8 +162,11 @@ def upload(request):
             localPath = path+'/' + zipfilename
             while not os.path.exists(localPath):
                 time.sleep(2)
-            upfile.uploadFile(localPath, project, platform,version)
-            insertdb.insertdb(localPath, project,platform, version)
+            if project == 'Mark':
+                upfile.uploadMarkFile(localPath, project, version)
+            else:
+                upfile.uploadFile(localPath, project, platform, version)
+            insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
             return HttpResponse("上传完成!")
 

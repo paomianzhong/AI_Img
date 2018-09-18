@@ -6,6 +6,7 @@ import os,urllib
 from . import upload
 
 
+'''下载文件'''
 def uploadFile(localPath,project,platform,version):
 	resolution = os.listdir(localPath)
 	count = len(resolution)
@@ -32,8 +33,23 @@ def uploadFile(localPath,project,platform,version):
 				ret = rr.uploadSingleFile()
 				print("Start uploading files: %s ,status:%d " % (filePath,ret))
 
+def uploadMarkFile(localPath,project,version):
+	for dirs in os.walk(localPath):
+		for file in dirs[2]:
+			filePath = localPath + '/' + file
+			rr = upload.upload()
+			rr.objectKey = project + '/' + version + '/' + file
+			print("KS3路径：" + rr.objectKey)
+			rr.filePath = filePath
+			rr.bucket = 'qa-vod'  # 上传bucket
+			rr.ak = 'AKLTzSNRzrm5QeOAl95nkERhqA'
+			rr.sk = 'OFRC8ECyyUexud8S36QI4xTXNqyXZeAo2MBivflzZW6MKxkZ5R8/gLJPLsf6smu2fg=='
+			ret = rr.uploadSingleFile()
+			print("Start uploading files: %s ,status:%d " % (filePath, ret))
+
 
 if __name__ == '__main__':
 	pass
+
 
 
