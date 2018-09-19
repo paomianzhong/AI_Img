@@ -6,7 +6,7 @@
 </head>
 <body>
 <p>批量上传图片并插入信息到数据库</p>
-<form action="upload"  method="post" enctype="multipart/form-data" >
+<form action="up"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     项目名称:
     <input type="radio" name="project" value="AI_Project">AI_Project
@@ -16,9 +16,10 @@
     <input type="radio" name="platform" value="Android">IOS
     <input type="radio" name="platform" value="Android">Server<br>
     版本：<input type="text" name="version"><br>
-    选择要上传的图片版本(例如 版本.zip)：<br>
-    <input type="file" name="myfile"><br>
-    <input type="submit" value="上传">
+    <!--选择要上传的图片版本(例如 版本.zip)：<br>-->
+    <!--<input type="file" name="myfile"><br>-->
+    <input type="submit" value="提交">
+
 </form>
 
 </body>

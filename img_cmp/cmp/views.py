@@ -6,10 +6,12 @@ import arrow
 import zipfile,os,time,shutil
 from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
+from django.shortcuts import render_to_response
 
 from .models import Image, Grade
 from .forms import GradeForm, GradeForm2
 
+from django.views.decorators.csrf import csrf_exempt
 from . import upfile
 from . import insertdb
 
@@ -127,51 +129,36 @@ def insert(request):
         return HttpResponse(json.dumps({'result': e}))
 
 
-def upload(request):
+def up(request):
     if request.POST:
         project = request.POST.get('project', None)
-        print("project"+project)
+        print("project:"+project)
         platform = request.POST.get('platform', '')
         version = request.POST.get('version', '')
         # 修改上传目录
-        # path = '/Users/zhangminghui/AI_Img/img_cmp/cmp/image_set'
-        path = '/home/eva/AI_Img/img_cmp/cmp/image_set'
-        isExists = os.path.exists(path)
-        # 判断结果
-        if not isExists:
-            os.mkdir(path)
-            print(path + ' 创建成功')
-
-        # 获取上传的文件，如果没有文件，则默认为None
-        File = request.FILES.get("myfile", None)
-        if File is None:
-            return HttpResponse("没有需要上传的文件")
-        else:
-
-            with open("./cmp/image_set/%s" % File.name, 'wb+') as f:
-                # 分块写入文件
-                for chunk in  File.chunks():
-                    f.write(chunk)
-
-            filename = path+'/'+File.name
-            fz = zipfile.ZipFile(filename, 'r')
-            for file in fz.namelist():
-                fz.extract(file, path)
-            base = os.path.basename(filename)
-            zipfilename = os.path.splitext(base)[0]
-            localPath = path+'/' + zipfilename
-            while not os.path.exists(localPath):
-                time.sleep(2)
-            if project == 'Mark':
-                upfile.uploadMarkFile(localPath, project, version)
-            else:
-                upfile.uploadFile(localPath, project, platform, version)
+        # path = '/Users/zhangminghui/AI_Img/img_cmp/upload'
+        path = '/home/eva/AI_Img/img_cmp/upload'
+        zipname = path+'/'+os.listdir(path)[0]
+        fz = zipfile.ZipFile(zipname, 'r')
+        for file in fz.namelist():
+            fz.extract(file, path)
+        base = os.path.basename(zipname)
+        zipfilename = os.path.splitext(base)[0]
+        localPath = path+'/' + zipfilename
+        while not os.path.exists(localPath):
+            time.sleep(2)
+        if project == 'Mark':
+            upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
-            return HttpResponse("上传完成!")
+        else:
+            upfile.uploadFile(localPath, project, platform, version)
+            insertdb.insertdb(localPath, project, platform, version)
+            shutil.rmtree(path)
+        return HttpResponse("上传完成!")
 
     else:
-        return render(request, "upload.html")
+        return render(request, "up.html")
 
 
 def export(request):
@@ -181,4 +168,49 @@ def export(request):
     response['Content-Type'] = 'application/vnd.ms-excel'
     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
     return response
+
+
+@csrf_exempt
+def fileupload(request):
+    if request.method == 'POST':
+        upload_file = request.FILES.get('file')
+        task = request.POST.get('task_id')  # 获取文件唯一标识符
+        chunk = request.POST.get('chunk', 0)  # 获取该分片在所有分片中的序号
+        filename = '%s%s' % (task, chunk)  # 构成该分片唯一标识符
+        print("filename=",filename)
+        tempDir = './upload/'
+        if not os.path.exists(tempDir):
+            os.mkdir(tempDir)
+        path = tempDir + filename
+        f = open(path, 'wb')
+        f.write(upload_file.read())
+        f.close()
+    return render_to_response('upload2.html', locals())
+
+
+def fileMerge(request):
+    print(request.GET)
+    task = request.GET.get('task_id')
+    ext = request.GET.get('filename', '')
+    name = request.GET.get('filename', '')
+    print(ext)
+    upload_type = request.GET.get('type')
+    if len(ext) == 0 and upload_type:
+        ext = upload_type.split('/')[1]
+    ext = '' if len(ext) == 0 else '.%s' % ext  # 构建文件后缀名
+    chunk = 0
+    with open('./upload/%s' % (name), 'wb') as target_file:  # 创建新文件
+        while True:
+            try:
+                filename = './upload/%s%d' % (task, chunk)
+                source_file = open(filename, 'rb')  # 按序打开每个分片
+                target_file.write(source_file.read())  # 读取分片内容写入新文件
+                source_file.close()
+            except IOError:
+                break
+            chunk += 1
+            os.remove(filename)  # 删除该分片，节约空间
+    return render_to_response('upload2.html',locals())
+
+
 
