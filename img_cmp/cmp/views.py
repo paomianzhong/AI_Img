@@ -148,7 +148,7 @@ def up(request):
         os.remove(zipname)
         localPath = path+'/' + zipfilename
         while not os.path.exists(localPath):
-            time.sleep(2)
+            time.sleep(0.5)
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
