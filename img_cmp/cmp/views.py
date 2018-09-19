@@ -144,17 +144,19 @@ def up(request):
             fz.extract(file, path)
         base = os.path.basename(zipname)
         zipfilename = os.path.splitext(base)[0]
+        shutil.rmtree(path+'/'+'__MACOSX')
+        os.remove(zipname)
         localPath = path+'/' + zipfilename
         while not os.path.exists(localPath):
             time.sleep(2)
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
-            shutil.rmtree(path)
+            # shutil.rmtree(path)
         else:
             upfile.uploadFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
-            shutil.rmtree(path)
+            # shutil.rmtree(path)
         return HttpResponse("上传完成!")
 
     else:
