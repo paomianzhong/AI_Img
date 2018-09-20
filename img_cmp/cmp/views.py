@@ -74,7 +74,7 @@ def compare2(request, project):
         v = request.GET['img_version']
         imgs = Image.objects.filter(project=project, version=v)
         numbers = list(range(1, len(imgs) + 1))
-        num = request.GET['number'].zfill(2)
+        num = request.GET['number'].zfill(3)
         img = Image.objects.get(project=project, version=v, name__startswith=num)
         context.update({'img': img})
         selected = [v, num]
@@ -152,11 +152,11 @@ def up(request):
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
-            # shutil.rmtree(path)
+            shutil.rmtree(path)
         else:
             upfile.uploadFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
-            # shutil.rmtree(path)
+            shutil.rmtree(path)
         return HttpResponse("上传完成!")
 
     else:

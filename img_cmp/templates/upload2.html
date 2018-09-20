@@ -34,9 +34,9 @@
             pick: '#picker',                          //填上传按钮的id选择器值
             auto: true,                               //选择文件后，是否自动上传
             chunked: true,                            //是否分片
-            chunkSize: 512 * 1024,              //每个分片的大小，这里为10M
+            chunkSize: 512 * 1024,              //每个分片的大小，这里为512K
             chunkRetry: 3,                            //某分片若上传失败，重试次数
-            threads: 4,                               //线程数量，考虑到服务器，这里就选了1
+            threads: 8,                               //线程数量，考虑到服务器，这里就选了1
             duplicate: true,                          //分片是否自动去重
             formData: {                               //每次上传分片，一起携带的数据
                 task_id: task_id,
@@ -68,6 +68,7 @@
 
         uploader.on('uploadComplete', function(file) {//上传结束，无论文件最终是否上传成功，该方法都会被调用
             $('.progress-bar').removeClass('active progress-bar-striped');
+            <!--$.post('/up/', data);-->
         });
 
     });
