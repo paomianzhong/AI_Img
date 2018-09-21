@@ -14,6 +14,7 @@ from .forms import GradeForm, GradeForm2
 from django.views.decorators.csrf import csrf_exempt
 from . import upfile
 from . import insertdb
+from . import refilename
 
 
 def index(request):
@@ -131,24 +132,29 @@ def insert(request):
 
 def up(request):
     if request.POST:
-        project = request.POST.get('project', None)
-        print("project:"+project)
+        isrename = request.POST.get('rename','')
+        project = request.POST.get('project', '')
+        print("isrename:"+isrename)
         platform = request.POST.get('platform', '')
         version = request.POST.get('version', '')
         # 修改上传目录
-        # path = '/Users/zhangminghui/AI_Img/img_cmp/upload'
+        # path = '/Users/zhangminghui/Documents/AI_Img/img_cmp/upload'
         path = '/home/eva/AI_Img/img_cmp/upload'
-        zipname = path+'/'+os.listdir(path)[0]
+        zipname = path + '/' + os.listdir(path)[0]
         fz = zipfile.ZipFile(zipname, 'r')
         for file in fz.namelist():
             fz.extract(file, path)
         base = os.path.basename(zipname)
         zipfilename = os.path.splitext(base)[0]
-        shutil.rmtree(path+'/'+'__MACOSX')
-        os.remove(zipname)
         localPath = path+'/' + zipfilename
         while not os.path.exists(localPath):
-            time.sleep(0.5)
+            time.sleep(0.2)
+        if isrename == '1':
+            refilename.refilename(localPath)
+        else:
+            pass
+        shutil.rmtree(path + '/' + '__MACOSX')
+        os.remove(zipname)
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
