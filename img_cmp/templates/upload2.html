@@ -102,7 +102,7 @@ margin: 20px;
             pick: '#picker',                          //填上传按钮的id选择器值
             auto: true,                               //选择文件后，是否自动上传
             chunked: true,                            //是否分片
-            chunkSize: 512 * 1024,              //每个分片的大小，这里为512K
+            chunkSize: 128 * 1024,              //每个分片的大小，这里为128K
             chunkRetry: 3,                            //某分片若上传失败，重试次数
             threads: 8,                               //线程数量，考虑到服务器，这里就选了1
             duplicate: true,                          //分片是否自动去重
