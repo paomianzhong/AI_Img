@@ -15,84 +15,72 @@
 <script src="/static/js/jquery-2.1.1.js"></script>
 {{ script|safe }}
 {% endblock %}
+<head>
+<style>
+.navbar-collapse{
+	background-color:#0b0c0c;
+    	width: 100%;
+    	min-width: 1024px;
+    	height: 48px;
+    	max-height: 44px;
+        right: 0;
+    	left: 0;
+    	z-index: 9999;
+    	display: block;
+    	margin: 0;
+	font-size: 17px;
+	padding-right: 20px;
+	padding-left: 240px;
+  
+
+}
+li a{
+margin: 20px;
+}
+.ac-gn-link-text{
+    color:#FFFFFF;
+
+     font-size: 1em;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: inherit;
+}
+</style>
+</head>
 
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="collapse navbar-collapse">
-        <p style="font-size: 30px;font-weight: 600;">图片评测系统主页</p>
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light">-->
+<nav class="navbar  navbar-expand-lg">
+  <div  class="collapse navbar-collapse" >
+	<li>
+	<img src="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/%E9%87%91%E5%B1%B1%E4%BA%911logo.jpeg" height=30 width=40/>
+	</li>
+	<li class="ac-gn-item ac-gn-item-menu ac-gn-support">
+	<a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8030/cmp/AI-case/" data-analytics-title="support">
+	    <span class="ac-gn-link-text">KIE</span>
+	</a>
+	</li>
+	<li>
+	<a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8030/cmp/Zhaidai-case/" data-analytics-title="support">
+	    <span class="ac-gn-link-text">画质增强</span>
+	</a>
+	</li>
+	<li>
+	<a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8030/new/Mark/" data-analytics-title="support">
+	    <span class="ac-gn-link-text">训练集</span>
+	</a>
+	</li>
+	<li>
+	<a class="ac-gn-link ac-gn-link-support" href="http://120.92.218.10:8223/diff2#" data-analytics-title="support">
+	    <span class="ac-gn-link-text">窄带视频</span>
+	</a>
+	</li>
+	<li>
+	<a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8030/files/upload2" data-analytics-title="support">
+	    <span class="ac-gn-link-text">上传</span>
+	</a>
+	</li>
   </div>
 </nav>
 
-<!-- Projects -->
-<div id="project-list">
-    {% for project in projects %}
-    <div class="platforms-content-platform platform-height">
-        <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">{{ project }}</div>
-            <div class="card-body">
-                {% if project != 'Mark' %}
-                <h5 class="card-title">
-                    <a href="/cmp/{{ project }}" class="platform-content-platform-link">{{ project }} Test Link</a>
-                </h5>
-                <div class="platforms-content-platform-img">
-                    <a href="/cmp/{{ project }}" class="platforms-content-platform-link">
-                        <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
-                    </a>
-                </div>
-                {% else %}
-                <h5 class="card-title">
-                    <a href="/new/{{ project }}" class="platform-content-platform-link">{{ project }} Test Link</a>
-                </h5>
-                <div class="platforms-content-platform-img">
-                    <a href="/new/{{ project }}" class="platforms-content-platform-link">
-                        <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
-                    </a>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <br>
-        <div class="platforms-content-tags">
-        </div>
-    </div>
-    <br>
-    {% endfor %}
-
-    <div class="platforms-content-platform platform-height">
-        <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">Image Mysql</div>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="http://10.100.51.45:8020/admin/cmp/image/" class="platform-content-platform-link">Image Mysql Test Link</a>
-                </h5>
-                <div class="platforms-content-platform-img">
-                    <a href="/{{ project }}" class="platforms-content-platform-link">
-                        <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="platforms-content-tags">
-        </div>
-    </div>
-<br>
-    <div class="platforms-content-platform platform-height">
-        <div class="card bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">Image Upload</div>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a href="http://10.100.51.45:8020/files/upload2" class="platform-content-platform-link">Image Upload and Insert DB</a>
-                </h5>
-                <div class="platforms-content-platform-img">
-                    <a href="/{{ project }}" class="platforms-content-platform-link">
-                        <img src="http://10.69.33.69:8000/static/img/default_logo.png" class="platforms-content-platform-img">
-                    </a>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="platforms-content-tags">
-        </div>
-    </div>
-</div>
