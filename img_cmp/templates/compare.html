@@ -199,6 +199,11 @@ margin: 20px;
                 dataType: "json",
                 success: function(data){
                     v.length = 0;
+                    var option1 = document.createElement("option");
+                    option1.name = "Version";
+                    option1.innerHTML = "Version";
+                    option1.value = "Version";
+                    v.appendChild(option1);
                     for (var name in data.versions){
                         var option = document.createElement("option");
                         option.name = name;
@@ -225,6 +230,7 @@ margin: 20px;
                 dataType: "json",
                 success: function(data){
                     r.length = 0;
+                    alert("new1");
                     for (var name in data.resolutions){
                         var option = document.createElement("option");
                         option.name = name;
