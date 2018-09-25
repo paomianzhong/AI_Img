@@ -91,40 +91,31 @@ margin: 20px;
   <div class="collapse navbar-collapse">
     <form class="form-inline" method="get">
       <label class="my-1 mr-2">图片1</label>
-      <select class="custom-select my-1 mr-sm-2" name="img1_platform">
+      <select id="platform1" onchange="change_version('1')" class="custom-select my-1 mr-sm-2" name="img1_platform">
         <option selected>{{ selected.0 }}</option>
           {% for p in platforms %}
         <option value="{{ p }}">{{ p }}</option>
           {% endfor %}
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" name="img1_version">
+      <select id="version1" onchange="change_resolution()" class="custom-select my-1 mr-sm-2" name="img1_version">
         <option selected>{{ selected.1 }}</option>
-        {% for v in versions %}
-        <option value="{{ v }}">{{ v }}</option>
-        {% endfor %}
       </select>
 
       <label class="my-1 mr-2">图片2</label>
-      <select class="custom-select my-1 mr-sm-2" name="img2_platform">
+      <select id="platform2" onchange="change_version('2')" class="custom-select my-1 mr-sm-2" name="img2_platform">
         <option selected>{{ selected.2 }}</option>
           {% for p in platforms %}
         <option value="{{ p }}">{{ p }}</option>
           {% endfor %}
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" name="img2_version">
+      <select id="version2" class="custom-select my-1 mr-sm-2" name="img2_version">
         <option selected>{{ selected.3 }}</option>
-        {% for v in versions %}
-        <option value="{{ v }}">{{ v }}</option>
-        {% endfor %}
       </select>
 
-      <select class="custom-select my-1 mr-sm-2" name="resolution">
+      <select id="resolution" class="custom-select my-1 mr-sm-2" name="resolution">
         <option selected>{{ selected.4 }}</option>
-        {% for r in resolutions %}
-        <option value="{{ r }}">{{ r }}</option>
-        {% endfor %}
       </select>
       <select id="number" class="custom-select my-1 mr-sm-2" name="number">
         <option selected>{{ selected.5 }}</option>
@@ -186,6 +177,64 @@ margin: 20px;
             }
         }
         document.forms[1].target="rfFrame";
+    }
+</script>
+
+<script>
+    function change_version(txt){
+        if (txt == '1'){
+            var s1 = document.getElementById("platform1");
+            var value = s1.options[s1.selectedIndex].value;
+            var v = document.getElementById("version1");
+        }else{
+            var s2 = document.getElementById("platform2");
+            var value = s2.options[s2.selectedIndex].value;
+            var v = document.getElementById("version2");
+        }
+        var ul = "/api/version/?proj={{ project }}&plat="+value;
+        if (value != 'Platform'){
+            $.ajax({
+                url: ul,
+                type: "get",
+                dataType: "json",
+                success: function(data){
+                    v.length = 0;
+                    for (var name in data.versions){
+                        var option = document.createElement("option");
+                        option.name = name;
+                        option.innerHTML = name;
+                        option.value = data.versions[name];
+                        v.appendChild(option);
+                    }
+                }
+            });
+        }
+    }
+
+    function change_resolution(){
+        var p = document.getElementById("platform1");
+        var v = document.getElementById("version1");
+        var r = document.getElementById("resolution");
+        var platform = p.options[p.selectedIndex].value;
+        var version = v.options[v.selectedIndex].value;
+        var ul = "/api/resolution/?proj={{ project }}&plat="+platform+"&ver="+version;
+        if (platform != 'Platform' && version != 'Version'){
+            $.ajax({
+                url: ul,
+                type: "get",
+                dataType: "json",
+                success: function(data){
+                    r.length = 0;
+                    for (var name in data.resolutions){
+                        var option = document.createElement("option");
+                        option.name = name;
+                        option.innerHTML = name;
+                        option.value = data.resolutions[name];
+                        r.appendChild(option);
+                    }
+                }
+            });
+        }
     }
 </script>
 {# Read the documentation for more information #}

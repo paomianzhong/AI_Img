@@ -25,7 +25,7 @@ def index(request):
 
 def compare(request, project):
     form = GradeForm
-    context = {'form': form, 'numbers': list(range(1, 21))}
+    context = {'form': form, 'numbers': list(range(1, 21)), 'project': project}
     choices = Image.category(project)
     context.update(choices)
     selected1 = ['Platform', 'Version', 'Platform', 'Version', 'Resolution', '1']
@@ -273,6 +273,30 @@ def fileMerge(request):
             chunk += 1
             os.remove(filename)  # 删除该分片，节约空间
     return render_to_response('upload2.html',locals())
+
+
+def update_version(request):
+    proj, plat = request.GET['proj'], request.GET['plat']
+    versions = Image.get_version(proj, plat)
+    dct = {}
+    for v in versions:
+        dct.update({v: v})
+    data = {"versions": dct}
+    ret = HttpResponse(json.dumps(data))
+    ret['Content-Type'] = 'application/json;charset=uft-8'
+    return ret
+
+
+def update_resolution(request):
+    proj, plat, ver = request.GET['proj'], request.GET['plat'], request.GET['ver']
+    resolutions = Image.get_resolutions(proj, plat, ver)
+    dct = {}
+    for r in resolutions:
+        dct.update({r: r})
+    data = {"resolutions": dct}
+    ret = HttpResponse(json.dumps(data))
+    ret['Content-Type'] = 'application/json;charset=utf-8'
+    return ret
 
 
 

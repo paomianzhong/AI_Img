@@ -13,4 +13,6 @@ urlpatterns = [
     path('grade/<int:pid>/', views.grade, name='grade'),
     path('api/grade/<int:pid>/', views.grade2, name='grade2'),
     path('api/export/', views.export, name='export'),
+    path('api/version/', views.update_version, name='version'),
+    path('api/resolution/', views.update_resolution, name='resolution'),
 ]
