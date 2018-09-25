@@ -23,7 +23,15 @@ def refilename(path):
             os.rename(src, dst)
             print('converting %s to %s ...' % (src, dst))
             j = j + 1
-    print('total %d to rename & converted %d jpgs' % (total_num, j-1))
+    k = j
+    for item in filelist:
+        if item.endswith('.jpeg'):
+            src = os.path.join(os.path.abspath(path), item)
+            dst = os.path.join(os.path.abspath(path), format(str(j), '0>3s') + '.jpeg')
+            os.rename(src, dst)
+            print('converting %s to %s ...' % (src, dst))
+            k = k + 1
+    print('total %d to rename & converted %d jpgs' % (total_num, k-1))
 
 
 def zip_file(path,zipname):
