@@ -210,21 +210,21 @@ def up(request):
 
 def export(request):
     p, v = request.GET['proj'], request.GET['ver']
-    content = Image.export_xls(proj=p, ver=v)
-    response = HttpResponse(content)
-    response['Content-Type'] = 'application/vnd.ms-excel'
-    response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
-    # if p == 'Mark':
-    #     content = Image.export_xls(proj=p, ver=v)
-    #     response = HttpResponse(content)
-    #     response['Content-Type'] = 'application/vnd.ms-excel'
-    #     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
-    # else:
-    #     category = request.GET['cat']
-    #     content = Image.export_xls2(proj=p, ver=v, cat=category)
-    #     response = HttpResponse(content)
-    #     response['Content-Type'] = 'application/vnd.ms-excel'
-    #     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    # content = Image.export_xls(proj=p, ver=v)
+    # response = HttpResponse(content)
+    # response['Content-Type'] = 'application/vnd.ms-excel'
+    # response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    if p == 'Mark':
+        content = Image.export_xls(proj=p, ver=v)
+        response = HttpResponse(content)
+        response['Content-Type'] = 'application/vnd.ms-excel'
+        response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    else:
+        # category = request.GET['cat']
+        content = Image.export_xls2(proj=p, ver=v)
+        response = HttpResponse(content)
+        response['Content-Type'] = 'application/vnd.ms-excel'
+        response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
     return response
 
 
