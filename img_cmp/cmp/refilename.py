@@ -11,7 +11,7 @@ def refilename(path):
     for item in filelist:
         if item.endswith('.png'):
             src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), format(str(i), '0>3s') + '.png')
+            dst = os.path.join(os.path.abspath(path), '0'+format(str(i), '0>3s') + '.png')
             os.rename(src, dst)
             print('converting %s to %s ...' % (src, dst))
             i = i + 1
@@ -19,7 +19,7 @@ def refilename(path):
     for item in filelist:
         if item.endswith('.jpg'):
             src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), format(str(j), '0>3s') + '.jpg')
+            dst = os.path.join(os.path.abspath(path), '0'+format(str(j), '0>3s') + '.jpg')
             os.rename(src, dst)
             print('converting %s to %s ...' % (src, dst))
             j = j + 1
@@ -27,7 +27,7 @@ def refilename(path):
     for item in filelist:
         if item.endswith('.jpeg'):
             src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), format(str(j), '0>3s') + '.jpeg')
+            dst = os.path.join(os.path.abspath(path), '0'+format(str(j), '0>3s') + '.jpeg')
             os.rename(src, dst)
             print('converting %s to %s ...' % (src, dst))
             k = k + 1
