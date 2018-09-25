@@ -181,7 +181,7 @@ def up(request):
         platform = request.POST.get('platform', '')
         version = request.POST.get('version', '')
         # 修改上传目录
-        # path = '/Users/zhangminghui/Documents/AI_Img/img_cmp/upload'
+        # path = '/Users/zhangminghui/AI_Img/img_cmp/upload'
         path = '/home/eva/AI_Img/img_cmp/upload'
         zipname = path + '/' + os.listdir(path)[0]
         fz = zipfile.ZipFile(zipname, 'r')
@@ -191,12 +191,14 @@ def up(request):
         zipfilename = os.path.splitext(base)[0]
         localPath = path+'/' + zipfilename
         while not os.path.exists(localPath):
-            time.sleep(0.2)
+            time.sleep(0.1)
         if isrename == '1':
             refilename.refilename(localPath)
+            time.sleep(5)
         else:
             pass
-        shutil.rmtree(path + '/' + '__MACOSX')
+        if os.path.exists(path + '/' + '__MACOSX'):
+            shutil.rmtree(path + '/' + '__MACOSX')
         os.remove(zipname)
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
