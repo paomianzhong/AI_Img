@@ -92,7 +92,7 @@ def compare2(request, project):
 
 def grade(request,pid):
     data = []
-    g_num1, g_num2,g_num3,dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0, 0, 0
+    g_num1, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
     # pid = request.GET['']
     v = request.GET['version']
     c = request.GET['category']
@@ -115,9 +115,9 @@ def grade(request,pid):
         dct.update({"dem1": round(dem1/g_num1, 2), "dem2": round(dem2/g_num1, 2), "dem3": round(dem3/g_num1, 2),
                     "dem4": round(dem4/g_num1, 2), "dem5": round(dem5/g_num1, 2)})
     data.append(dct)
-    dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0
 
-    resolution_dct = {"version": "c_" + c}
+    g_num2, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+    resolution_dct = {"version": c}
     for g in resolution_grades:
         g_num2 += 1
         dem1 += g.dem1
@@ -130,8 +130,7 @@ def grade(request,pid):
                     "dem4": round(dem4/g_num2, 2), "dem5": round(dem5/g_num2, 2)})
     data.append(resolution_dct)
 
-    dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0
-
+    g_num3, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
     version_dct = {"version": v}
     for g in version_grades:
         g_num3 += 1
