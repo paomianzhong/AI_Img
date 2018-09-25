@@ -129,6 +129,9 @@ margin: 20px;
     </form>
     <form class="form-inline my-lg-0">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal" style="background:red;">打分</button>
+        <a href="/api/export/?proj={{ img2.project }}&ver={{ img2.version }}&cat={{ img2.resolution }}">
+        <button type="button" class="btn btn-primary">导出</button>
+        </a>
     </form>
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
@@ -171,7 +174,7 @@ margin: 20px;
         <table width="70%" align="center">
             <tr>
                 <td width="35%" style="float: left;margin: 0px;padding: 0px;">
-                    <table data-toggle="table" data-url="/grade/{{ img1.id }}" >
+                    <table data-toggle="table" data-url="/grade/{{ img1.id }}?category={{ img1.resolution }}&version={{ img1.version}}" >
                         <thead>
                         <tr>
                             <th data-field="version">
@@ -191,7 +194,7 @@ margin: 20px;
                     </table>
                 </td>
                 <td width="35%" style="float: right;margin: 0px;padding: 0px;">
-                    <table data-toggle="table" data-url="/grade/{{ img2.id }}" >
+                    <table data-toggle="table" data-url="/grade/{{ img2.id }}?category={{ img2.resolution }}&version={{ img2.version}}" >
                         <thead>
                         <tr>
                             <th data-field="version">
@@ -215,6 +218,7 @@ margin: 20px;
     </div>
 </div>
 {% endif %}
+
 
 <!-- image -->
 {% if img2 %}

@@ -75,7 +75,7 @@ def compare2(request, project):
         v = request.GET['img_version']
         imgs = Image.objects.filter(project=project, version=v)
         numbers = list(range(1, len(imgs) + 1))
-        num = request.GET['number'].zfill(3)
+        num = request.GET['number'].zfill(2)
         img = Image.objects.get(project=project, version=v, name__startswith=num)
         context.update({'img': img})
         selected = [v, num]
@@ -90,12 +90,29 @@ def compare2(request, project):
     return render(request, 'compare3.html', context)
 
 
-def grade(request, pid):
+def grade(request,pid):
     data = []
     g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+    # pid = request.GET['']
+    v = request.GET['version']
+    c = request.GET['category']
     img = Image.objects.get(pk=pid)
-    dct = {"version": img.version}
+    version_imgs = Image.objects.filter(version=v)
+    # print("version img "+type(version_imgs))
+    resolution_imgs = Image.objects.filter(version=v, resolution=c)
+    dct = {"version": img.name}
     grades = Grade.objects.filter(img=img)
+    ver_imgs = ""
+    res_imgs = ""
+    for item in version_imgs:
+        ver_imgs += str(item.id) + ","
+    ver_imgs = ver_imgs[0:-1]
+    for item in resolution_imgs:
+        res_imgs += str(item.id) + ","
+    res_imgs = res_imgs[0:-1]
+    version_grades = Grade.objects.extra(where=['img_id IN ('+ ver_imgs +')'])
+    resolution_grades = Grade.objects.extra(where=['img_id IN ('+ res_imgs +')'])
+    # cgrades = Grade.objects.filter(img=imgs)
     for g in grades:
         g_num += 1
         dem1 += g.dem1
@@ -107,6 +124,32 @@ def grade(request, pid):
         dct.update({"dem1": round(dem1/g_num, 2), "dem2": round(dem2/g_num, 2), "dem3": round(dem3/g_num, 2),
                     "dem4": round(dem4/g_num, 2), "dem5": round(dem5/g_num, 2)})
     data.append(dct)
+
+    version_dct = {"version": "v_"+v}
+    for g in version_grades:
+        g_num += 1
+        dem1 += g.dem1
+        dem2 += g.dem2
+        dem3 += g.dem3
+        dem4 += g.dem4
+        dem5 += g.dem5
+    if g_num != 0:
+        version_dct.update({"dem1": round(dem1/g_num, 2), "dem2": round(dem2/g_num, 2), "dem3": round(dem3/g_num, 2),
+                    "dem4": round(dem4/g_num, 2), "dem5": round(dem5/g_num, 2)})
+    data.append(version_dct)
+    resolution_dct = {"version": "c_"+c}
+    for g in resolution_grades:
+        g_num += 1
+        dem1 += g.dem1
+        dem2 += g.dem2
+        dem3 += g.dem3
+        dem4 += g.dem4
+        dem5 += g.dem5
+    if g_num != 0:
+        resolution_dct.update(
+            {"dem1": round(dem1 / g_num, 2), "dem2": round(dem2 / g_num, 2), "dem3": round(dem3 / g_num, 2),
+             "dem4": round(dem4 / g_num, 2), "dem5": round(dem5 / g_num, 2)})
+    data.append(resolution_dct)
     return HttpResponse(json.dumps(data))
 
 
@@ -175,6 +218,17 @@ def export(request):
     response = HttpResponse(content)
     response['Content-Type'] = 'application/vnd.ms-excel'
     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    # if p == 'Mark':
+    #     content = Image.export_xls(proj=p, ver=v)
+    #     response = HttpResponse(content)
+    #     response['Content-Type'] = 'application/vnd.ms-excel'
+    #     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    # else:
+    #     category = request.GET['cat']
+    #     content = Image.export_xls2(proj=p, ver=v, cat=category)
+    #     response = HttpResponse(content)
+    #     response['Content-Type'] = 'application/vnd.ms-excel'
+    #     response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
     return response
 
 
