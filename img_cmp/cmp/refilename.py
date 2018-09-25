@@ -6,32 +6,17 @@ import zipfile
 
 def refilename(path):
     filelist = os.listdir(path)
-    total_num = len(filelist)
     i = 1
     for item in filelist:
-        if item.endswith('.png'):
-            src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), '0'+format(str(i), '0>3s') + '.png')
-            os.rename(src, dst)
-            print('converting %s to %s ...' % (src, dst))
-            i = i + 1
-    j = i
-    for item in filelist:
-        if item.endswith('.jpg'):
-            src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), '0'+format(str(j), '0>3s') + '.jpg')
-            os.rename(src, dst)
-            print('converting %s to %s ...' % (src, dst))
-            j = j + 1
-    k = j
-    for item in filelist:
-        if item.endswith('.jpeg'):
-            src = os.path.join(os.path.abspath(path), item)
-            dst = os.path.join(os.path.abspath(path), '0'+format(str(j), '0>3s') + '.jpeg')
-            os.rename(src, dst)
-            print('converting %s to %s ...' % (src, dst))
-            k = k + 1
-    print('total %d to rename & converted %d jpgs' % (total_num, k-1))
+        filename = os.path.splitext(item)[0]  # 文件名
+        filetype = os.path.splitext(item)[1]  # 文件扩展名
+        src = os.path.join(os.path.abspath(path), item)
+        if i<1000:
+            dst = os.path.join(os.path.abspath(path), '0'+format(str(i), '0>3s') +filename+filetype)
+        else:
+            dst = os.path.join(os.path.abspath(path), format(str(i), '0>3s') + filename + filetype)
+        os.rename(src, dst)
+        i = i + 1
 
 
 def zip_file(path,zipname):
