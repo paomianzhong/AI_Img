@@ -92,7 +92,7 @@ def compare2(request, project):
 
 def grade(request,pid):
     data = []
-    g_num1, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+    g_num1, dem1, dem2, dem3, dem4, dem5, agv = 0, 0, 0, 0, 0, 0, 0
     # pid = request.GET['']
     v = request.GET['version']
     c = request.GET['category']
@@ -113,7 +113,7 @@ def grade(request,pid):
         dem5 += g.dem5
     if g_num1 != 0:
         dct.update({"dem1": round(dem1/g_num1, 2), "dem2": round(dem2/g_num1, 2), "dem3": round(dem3/g_num1, 2),
-                    "dem4": round(dem4/g_num1, 2), "dem5": round(dem5/g_num1, 2)})
+                    "dem4": round(dem4/g_num1, 2), "dem5": round(dem5/g_num1, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num1,2)})
     data.append(dct)
 
     g_num2, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
@@ -127,7 +127,7 @@ def grade(request,pid):
         dem5 += g.dem5
     if g_num2 != 0:
         resolution_dct.update({"dem1": round(dem1/g_num2, 2), "dem2": round(dem2/g_num2, 2), "dem3": round(dem3/g_num2, 2),
-                    "dem4": round(dem4/g_num2, 2), "dem5": round(dem5/g_num2, 2)})
+                    "dem4": round(dem4/g_num2, 2), "dem5": round(dem5/g_num2, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num2,2)})
     data.append(resolution_dct)
 
     g_num3, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
@@ -142,7 +142,7 @@ def grade(request,pid):
     if g_num3 != 0:
         version_dct.update(
             {"dem1": round(dem1 / g_num3, 2), "dem2": round(dem2 / g_num3, 2), "dem3": round(dem3 / g_num3, 2),
-             "dem4": round(dem4 / g_num3, 2), "dem5": round(dem5 / g_num3, 2)})
+             "dem4": round(dem4 / g_num3, 2), "dem5": round(dem5 / g_num3, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num3,2)})
     data.append(version_dct)
     return HttpResponse(json.dumps(data))
 
