@@ -105,8 +105,6 @@ class Image(models.Model):
             row = reduce(add, data)
             row.insert(0, img.name)
             stats.append(row)
-        row.insert(0, img.version)
-        stats.append(row)
         headers = ['名称']
         for dem in ['色调', '亮度', '内容', '噪声', '纹理']:
             h = [dem + str(i) for i in (list(range(width)) + ['avg'])]
