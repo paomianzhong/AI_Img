@@ -70,37 +70,65 @@ class Image(models.Model):
         导出图片打分信息为xls文件
         :return:
         """
-        imgs = Image.objects.filter(project=proj, version=ver)
-
-        grade_times = [img.get_grade_times() for img in imgs]
-        width = max(grade_times)
-        stats = tablib.Dataset()
-        if proj == 'Mark':
-            getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
+        total_imgs = Image.objects.filter(project=proj, version=ver)
+        resolutions = set([r.get('resolution') for r in total_imgs.values("resolution")])
+        data_set = set()
+        total_headers = ['名称']
+        total_stats = tablib.Dataset()
+        total_stats.title = 'Total Average'
+        for resolution in resolutions:
+            imgs = Image.objects.filter(project=proj, version=ver, resolution=resolution)
+            grade_times = [img.get_grade_times() for img in imgs]
+            width = max(grade_times)
+            stats = tablib.Dataset()
+            aver_data = ['Average']
+            headers = ['名称']
+            if proj == 'Mark':
+                stats.title = ver
+                getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
+                dem_list = ['对焦', '清晰', '曝光', '颜值']
+            elif proj == 'Zhaidai_Project':
+                stats.title = resolution
+                getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
+                dem_list = ['对焦', '清晰', '曝光', '颜值', '纹理']
+            else:
+                stats.title = resolution
+                getter = itemgetter('dem1', 'dem2')
+                dem_list = ['改进空间', '其他']
             for img in imgs:
                 data = getter(img.get_stats(width=width))
+                dct = set(list(data)[0])
+                if dct == {''}:
+                    continue
                 row = reduce(add, data)
                 row.insert(0, img.name)
                 stats.append(row)
-            headers = ['名称']
-            for dem in ['对焦', '清晰', '曝光', '颜值']:
-                h = [dem+str(i) for i in (list(range(width))+['avg'])]
-                headers.extend(h)
-            stats.headers = headers
-            return stats.export('xls')
-        else:
-            getter = itemgetter('dem1', 'dem2')
-            for img in imgs:
-                data = getter(img.get_stats(width=width))
-                row = reduce(add, data)
-                row.insert(0, img.name)
-                stats.append(row)
-            headers = ['名称']
-            for dem in ['改进空间', '其他']:
+            for dem in dem_list:
                 h = [dem + str(i) for i in (list(range(width)) + ['avg'])]
                 headers.extend(h)
             stats.headers = headers
-            return stats.export('xls')
+            for header in headers[1:]:
+                if header.endswith('avg'):
+                    h_list = list(filter(lambda x: x != '', stats[header]))
+                    aver_data.append(str(sum(h_list)/len(h_list)))
+                else:
+                    aver_data.append('\\')
+            stats.append(aver_data)
+            data_set.add(stats)
+            aver_data[0] = resolution
+            aver_data = list(filter(lambda x: x != '\\', aver_data))
+            total_stats.append(aver_data)
+        total_headers.extend(dem_list)
+        total_stats.headers = total_headers
+        total_average = ['Total Average']
+        for dem in dem_list:
+            h_list = list(filter(lambda x: x != '', total_stats[dem]))
+            h_list = [float(x) for x in h_list]
+            total_average.append(str(sum(h_list)/len(h_list)))
+        total_stats.append(total_average)
+        data_set.add(total_stats)
+        book = tablib.Databook(data_set)
+        return book.export('xls')
 
     def get_grade_times(self):
         """
