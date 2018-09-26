@@ -83,6 +83,8 @@ class Image(models.Model):
             stats = tablib.Dataset()
             aver_data = ['Average']
             headers = ['名称']
+            new_col = []
+
             if proj == 'Mark':
                 stats.title = ver
                 getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
@@ -95,6 +97,7 @@ class Image(models.Model):
                 stats.title = resolution
                 getter = itemgetter('dem1', 'dem2')
                 dem_list = ['改进空间', '其他']
+
             for img in imgs:
                 data = getter(img.get_stats(width=width))
                 dct = set(list(data)[0])
@@ -103,6 +106,7 @@ class Image(models.Model):
                 row = reduce(add, data)
                 row.insert(0, img.name)
                 stats.append(row)
+
             for dem in dem_list:
                 h = [dem + str(i) for i in (list(range(width)) + ['avg'])]
                 headers.extend(h)
@@ -110,21 +114,42 @@ class Image(models.Model):
             for header in headers[1:]:
                 if header.endswith('avg'):
                     h_list = list(filter(lambda x: x != '', stats[header]))
-                    aver_data.append(str(sum(h_list)/len(h_list)))
+                    try:
+                        aver_data.append(str(round(sum(h_list)/len(h_list), 2)))
+                    except ZeroDivisionError:
+                        aver_data.append(0)
                 else:
                     aver_data.append('\\')
             stats.append(aver_data)
+
+            for s in stats:
+                data_col = []
+                for index in range(len(stats.headers)):
+                    if stats.headers[index].endswith('avg'):
+                        data_col.append(float(s[index]))
+                try:
+                    new_col.append(str(round(sum(data_col)/len(data_col), 2)))
+                except ZeroDivisionError:
+                    new_col.append(0)
+            stats.append_col(new_col, header='Average')
+            dem_list.append('Average')
+
             data_set.add(stats)
-            aver_data[0] = resolution
-            aver_data = list(filter(lambda x: x != '\\', aver_data))
-            total_stats.append(aver_data)
+            last_data = list(stats[-1])
+            last_data[0] = resolution
+            filter_aver_data = list(filter(lambda x: x != '\\', last_data))
+            total_stats.append(filter_aver_data)
+
         total_headers.extend(dem_list)
         total_stats.headers = total_headers
         total_average = ['Total Average']
         for dem in dem_list:
             h_list = list(filter(lambda x: x != '', total_stats[dem]))
-            h_list = [float(x) for x in h_list]
-            total_average.append(str(sum(h_list)/len(h_list)))
+            total_list = [float(x) for x in h_list]
+            try:
+                total_average.append(str(round(sum(total_list)/len(total_list), 2)))
+            except ZeroDivisionError:
+                total_average.append(0)
         total_stats.append(total_average)
         data_set.add(total_stats)
         book = tablib.Databook(data_set)
