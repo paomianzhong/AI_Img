@@ -75,42 +75,32 @@ class Image(models.Model):
         grade_times = [img.get_grade_times() for img in imgs]
         width = max(grade_times)
         stats = tablib.Dataset()
-        getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
-        for img in imgs:
-            data = getter(img.get_stats(width=width))
-            row = reduce(add, data)
-            row.insert(0, img.name)
-            stats.append(row)
-        headers = ['名称']
-        for dem in ['对焦', '清晰', '曝光', '颜值']:
-            h = [dem+str(i) for i in (list(range(width))+['avg'])]
-            headers.extend(h)
-        stats.headers = headers
-        return stats.export('xls')
-
-    @classmethod
-    def export_xls2(cls, proj, ver):
-        """
-        导出图片打分信息为xls文件
-        :return:
-        """
-        imgs1 = Image.objects.filter(project=proj, version=ver)
-        # print(imgs1[0])
-        grade_times = [img.get_grade_times() for img in imgs1]
-        width = max(grade_times)
-        stats = tablib.Dataset()
-        getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
-        for img in imgs1:
-            data = getter(img.get_stats(width=width))
-            row = reduce(add, data)
-            row.insert(0, img.name)
-            stats.append(row)
-        headers = ['名称']
-        for dem in ['色调', '亮度', '内容', '噪声', '纹理']:
-            h = [dem + str(i) for i in (list(range(width)) + ['avg'])]
-            headers.extend(h)
-        stats.headers = headers
-        return stats.export('xls')
+        if proj == 'Mark':
+            getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4')
+            for img in imgs:
+                data = getter(img.get_stats(width=width))
+                row = reduce(add, data)
+                row.insert(0, img.name)
+                stats.append(row)
+            headers = ['名称']
+            for dem in ['对焦', '清晰', '曝光', '颜值']:
+                h = [dem+str(i) for i in (list(range(width))+['avg'])]
+                headers.extend(h)
+            stats.headers = headers
+            return stats.export('xls')
+        else:
+            getter = itemgetter('dem1', 'dem2')
+            for img in imgs:
+                data = getter(img.get_stats(width=width))
+                row = reduce(add, data)
+                row.insert(0, img.name)
+                stats.append(row)
+            headers = ['名称']
+            for dem in ['改进空间', '其他']:
+                h = [dem + str(i) for i in (list(range(width)) + ['avg'])]
+                headers.extend(h)
+            stats.headers = headers
+            return stats.export('xls')
 
     def get_grade_times(self):
         """

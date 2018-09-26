@@ -9,7 +9,7 @@ from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 
 from .models import Image, Grade
-from .forms import GradeForm, GradeForm2
+from .forms import GradeForm, GradeForm2, GradeForm3
 
 from django.views.decorators.csrf import csrf_exempt
 from . import upfile
@@ -64,31 +64,57 @@ def compare(request, project):
 
 
 def compare2(request, project):
-    form = GradeForm2
-    context = {'form': form}
-    versions = Image.get_version(project)
-    context.update({"versions": versions})
-    selected = ['Version', '1']
-    numbers = list(range(1, 21))
+    if project=='Mark':
+        form = GradeForm2
+        context = {'form': form}
+        versions = Image.get_version(project)
+        context.update({"versions": versions})
+        selected = ['Version', '1']
+        numbers = list(range(1, 21))
+        if request.GET:
+            v = request.GET['img_version']
+            imgs = Image.objects.filter(project=project, version=v)
+            numbers = list(range(1, len(imgs) + 1))
+            num = request.GET['number'].zfill(4)
+            img = Image.objects.get(project=project, version=v, name__startswith=num)
+            context.update({'img': img})
+            selected = [v, num]
 
-    if request.GET:
-        v = request.GET['img_version']
-        imgs = Image.objects.filter(project=project, version=v)
-        numbers = list(range(1, len(imgs) + 1))
-        num = request.GET['number'].zfill(4)
-        img = Image.objects.get(project=project, version=v, name__startswith=num)
-        context.update({'img': img})
-        selected = [v, num]
+        if request.POST:
+            data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
+            data['img'] = Image.objects.get(pk=request.POST['img_id'])
+            data['date'] = arrow.arrow.datetime.now()
+            Grade.objects.create(**data)
 
-    if request.POST:
-        data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
-        data['img'] = Image.objects.get(pk=request.POST['img_id'])
-        data['date'] = arrow.arrow.datetime.now()
-        Grade.objects.create(**data)
+        context.update({"numbers": numbers, "selected": selected})
+        return render(request, 'compare3.html', context)
+    else:
+        form = GradeForm3
+        context = {'form': form}
+        versions = Image.get_version(project)
+        context.update({"versions": versions})
+        choices = Image.category(project)
+        context.update(choices)
+        selected = ['Version', 'Category', '1']
+        numbers = list(range(1, 21))
+        if request.GET:
+            reso = request.GET['category']
+            v = request.GET['img_version']
+            imgs = Image.objects.filter(project=project, version=v, resolution=reso)
+            numbers = list(range(1, len(imgs) + 1))
+            num = request.GET['number'].zfill(2)
+            img = Image.objects.get(project=project, version=v, resolution=reso, name__startswith=num)
+            context.update({'img': img})
+            selected = [v, reso, num]
 
-    context.update({"numbers": numbers, "selected": selected})
-    return render(request, 'compare3.html', context)
+        if request.POST:
+            data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
+            data['img'] = Image.objects.get(pk=request.POST['img_id'])
+            data['date'] = arrow.arrow.datetime.now()
+            Grade.objects.create(**data)
 
+        context.update({"numbers": numbers, "selected": selected})
+        return render(request, 'compare4.html', context)
 
 def grade(request,pid):
     data = []
@@ -210,21 +236,10 @@ def up(request):
 
 def export(request):
     p, v = request.GET['proj'], request.GET['ver']
-    # content = Image.export_xls(proj=p, ver=v)
-    # response = HttpResponse(content)
-    # response['Content-Type'] = 'application/vnd.ms-excel'
-    # response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
-    if p == 'Mark':
-        content = Image.export_xls(proj=p, ver=v)
-        response = HttpResponse(content)
-        response['Content-Type'] = 'application/vnd.ms-excel'
-        response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
-    else:
-        # category = request.GET['cat']
-        content = Image.export_xls2(proj=p, ver=v)
-        response = HttpResponse(content)
-        response['Content-Type'] = 'application/vnd.ms-excel'
-        response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
+    content = Image.export_xls(proj=p, ver=v)
+    response = HttpResponse(content)
+    response['Content-Type'] = 'application/vnd.ms-excel'
+    response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
     return response
 
 

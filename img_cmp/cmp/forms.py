@@ -68,6 +68,11 @@ NEW_CHOICES_3 = (
     (1, '1-过曝'),
 )
 
+GAIJIN_CHOICES_1 = (
+    (3, '3-没有改进空间'),
+    (2, '2-改进空间一般'),
+    (1, '1-改进空间很大'),
+)
 
 class GradeForm(forms.ModelForm):
 
@@ -92,3 +97,11 @@ class GradeForm2(forms.ModelForm):
     dem2 = forms.IntegerField(required=True, widget=forms.Select(choices=NEW_CHOICES_2), label='清晰')
     dem3 = forms.IntegerField(required=True, widget=forms.Select(choices=NEW_CHOICES_3), label='曝光')
     dem4 = forms.IntegerField(required=True, label='颜值')
+
+class GradeForm3(forms.ModelForm):
+
+    class Meta:
+        model = Grade
+        fields = ['dem1', 'img']
+    img = forms.IntegerField(required=False, widget=forms.HiddenInput())
+    dem1 = forms.IntegerField(required=True, widget=forms.Select(choices=GAIJIN_CHOICES_1), label='改进空间')
