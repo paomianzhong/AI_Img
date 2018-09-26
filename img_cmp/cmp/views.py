@@ -211,6 +211,7 @@ def up(request):
             fz = zipfile.ZipFile(zipname, 'r')
             for file in fz.namelist():
                 fz.extract(file, path)
+            os.remove(zipname)
         while not os.path.exists(localPath):
             time.sleep(0.1)
         if isrename == '1':
@@ -220,7 +221,7 @@ def up(request):
             pass
         if os.path.exists(path + '/' + '__MACOSX'):
             shutil.rmtree(path + '/' + '__MACOSX')
-        os.remove(zipname)
+
         if project == 'Mark':
             upfile.uploadMarkFile(localPath, project, version)
             insertdb.insertdb(localPath, project, platform, version)
