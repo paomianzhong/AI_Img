@@ -201,20 +201,21 @@ def up(request):
         platform = request.POST.get('platform', '')
         version = request.POST.get('version', '')
         # 修改上传目录
-        # path = '/Users/zhangminghui/AI_Img/img_cmp/upload'
+        # path = '/Users/zhangminghui/Documents/AI_Img/img_cmp/upload'
         path = '/home/eva/AI_Img/img_cmp/upload'
         zipname = path + '/' + os.listdir(path)[0]
-        fz = zipfile.ZipFile(zipname, 'r')
-        for file in fz.namelist():
-            fz.extract(file, path)
         base = os.path.basename(zipname)
         zipfilename = os.path.splitext(base)[0]
-        localPath = path+'/' + zipfilename
+        localPath = path + '/' + zipfilename
+        if not os.path.exists(localPath):
+            fz = zipfile.ZipFile(zipname, 'r')
+            for file in fz.namelist():
+                fz.extract(file, path)
         while not os.path.exists(localPath):
             time.sleep(0.1)
         if isrename == '1':
             refilename.refilename(localPath)
-            time.sleep(5)
+            time.sleep(2)
         else:
             pass
         if os.path.exists(path + '/' + '__MACOSX'):
