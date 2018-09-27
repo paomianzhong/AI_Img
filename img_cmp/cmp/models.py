@@ -95,12 +95,14 @@ class Image(models.Model):
                 dem_list = ['对焦', '清晰', '曝光', '颜值', '纹理']
             else:
                 stats.title = resolution
-                getter = itemgetter('dem1', 'dem2')
-                dem_list = ['改进空间', '其他']
+                getter = itemgetter('dem1')
+                dem_list = ['改进空间']
 
             for img in imgs:
                 data = getter(img.get_stats(width=width))
-                dct = set(list(data)[0])
+                if isinstance(data, list):
+                    data = (data,)
+                dct = set(data[0])
                 if dct == {''}:
                     continue
                 row = reduce(add, data)
