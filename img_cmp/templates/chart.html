@@ -95,16 +95,12 @@ margin: 20px;
   <div class="collapse navbar-collapse">
     <form class="form-inline" method="post">
         {% csrf_token %}
-      <!--<label class="my-1 mr-2">图片1</label>-->
         <label class="my-1 mr-2">版本</label>
-        <div>
         {% for v in versions %}
             <label class="checkbox-inline">
-                <input value="{{ v }}" type="checkbox" name="img_version" />{{ v }}
+                <input value="{{ v }}" type="checkbox" name="img_version" checked="checked"/>{{ v }}
             </label>
         {% endfor %}
-        </div>
-
       <select class="custom-select my-1 mr-sm-2" name="category">
         <option selected>{{ selected.0 }}</option>
         {% for r in resolutions %}
@@ -152,22 +148,26 @@ margin: 20px;
 {% endif %}
 
 <script>
-    //存储被选中checkbox的个数以及value值
-var checked=$('input[id=remember_check]:checked');
-checked.each(function (i) {
-    localStorage.setItem(i,$(this).val());
-    localStorage.setItem('length',i);
-});
-$(function () {
-    //取得本地存储的被选中checkbox的个数，循环将checkbox选中
-    var length=localStorage.getItem('length');
-    for(var i=0;i<=length;i++){
-        var a=localStorage.getItem(i);
-        $("input:checkbox[value="+a+"]").attr("checked","checked");
-    }
-    //清空，避免刷新后checkbox还是选中状态
-    localStorage.clear();
-});
+
+var checkedIds= [];//保存选中的id，亦适用于分页
+
+/* 将选中的数据ID保存*/
+function submitcheck(){
+    if($(this).is(":checked")){
+         checkedIds.push($(this).attr("id"));
+     }else{
+         for(var i=0; i<checkedIds.length; i++){
+             if($(this).attr("id") == checkedIds[i]){
+             checkedIds.splice(i, 1);
+             break;
+             }
+         }
+     }
+ });
+
+---------------------
+
+本文来自 yaksok 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/yaksok/article/details/48706719?utm_source=copy
 
 </script>
 <script language="JavaScript">
