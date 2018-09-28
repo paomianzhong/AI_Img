@@ -341,24 +341,8 @@ def chart(request,project):
                                                  round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num, 2)]})
                 data.append(version_dct)
             else:
-                g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-                version_grade = Grade.objects.filter(img__version=v)
                 resolution_grade = Grade.objects.filter(img__version=v, img__resolution=reso)
-                version_dct = {"name": v}
                 resolution_dct = {"name": v + '_' + reso}
-                for g in version_grade:
-                    g_num += 1
-                    dem1 += g.dem1
-                    dem2 += g.dem2
-                    dem3 += g.dem3
-                    dem4 += g.dem4
-                    dem5 += g.dem5
-
-                if g_num != 0:
-                    version_dct.update({'data': [round(dem1 / g_num, 2), round(dem2 / g_num, 2), round(dem3 / g_num, 2),
-                                                  round(dem4 / g_num, 2), round(dem5 / g_num, 2),
-                                                  round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num, 2)]})
-                data.append(version_dct)
                 g_num1, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
                 for g in resolution_grade:
                     g_num1 += 1
@@ -374,7 +358,10 @@ def chart(request,project):
                 data.append(resolution_dct)
 
         context.update({'series': json.dumps(data)})
+        # context.update({'img_version': ver})
+        context['img_version'] = ver
     context['selected'] = selected
+
     return render(request, "chart.html", context)
 
 
