@@ -95,24 +95,18 @@ margin: 20px;
   <div class="collapse navbar-collapse">
     <form class="form-inline" method="post">
         {% csrf_token %}
-      <label class="my-1 mr-2">图片1</label>
-      <select id="img1_version" class="custom-select my-1 mr-sm-2" name="img1_version">
-        <option selected>{{ selected.0 }}</option>
+      <!--<label class="my-1 mr-2">图片1</label>-->
+        <label class="my-1 mr-2">版本</label>
+        <div>
         {% for v in versions %}
-        <option value="{{ v }}">{{ v }}</option>
+            <label class="checkbox-inline">
+                <input value="{{ v }}" type="checkbox" name="img_version" />{{ v }}
+            </label>
         {% endfor %}
-      </select>
-
-      <label class="my-1 mr-2">图片2</label>
-      <select id="img2_version" class="custom-select my-1 mr-sm-2" name="img2_version">
-        <option selected>{{ selected.1 }}</option>
-        {% for v in versions %}
-        <option value="{{ v }}">{{ v }}</option>
-        {% endfor %}
-      </select>
+        </div>
 
       <select class="custom-select my-1 mr-sm-2" name="category">
-        <option selected>{{ selected.2 }}</option>
+        <option selected>{{ selected.0 }}</option>
         {% for r in resolutions %}
         <option value="{{ r }}">{{ r }}</option>
         {% endfor %}
@@ -157,7 +151,25 @@ margin: 20px;
 </div>
 {% endif %}
 
+<script>
+    //存储被选中checkbox的个数以及value值
+var checked=$('input[id=remember_check]:checked');
+checked.each(function (i) {
+    localStorage.setItem(i,$(this).val());
+    localStorage.setItem('length',i);
+});
+$(function () {
+    //取得本地存储的被选中checkbox的个数，循环将checkbox选中
+    var length=localStorage.getItem('length');
+    for(var i=0;i<=length;i++){
+        var a=localStorage.getItem(i);
+        $("input:checkbox[value="+a+"]").attr("checked","checked");
+    }
+    //清空，避免刷新后checkbox还是选中状态
+    localStorage.clear();
+});
 
+</script>
 <script language="JavaScript">
 $(document).ready(function() {
    var title = {

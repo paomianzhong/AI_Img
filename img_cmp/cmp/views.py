@@ -316,77 +316,62 @@ def chart(request,project):
     context = {'project': project}
     choices = Image.category(project)
     context.update(choices)
-    selected = ['Version', 'Version', 'Category']
+    selected = ['Category']
     if request.method == 'POST':
         data = []
-        v1, v2 = request.POST.get('img1_version'), request.POST.get('img2_version')
+        ver = request.POST.getlist('img_version')
         reso = request.POST.get('category')
-        selected = [v1, v2, reso]
-        img1_version_grades = Grade.objects.filter(img__version=v1)
-        img2_version_grades = Grade.objects.filter(img__version=v2)
-        img1_resolution_grades = Grade.objects.filter(img__version=v1,img__resolution=reso)
-        img2_resolution_grades = Grade.objects.filter(img__version=v2, img__resolution=reso)
-        # 版本1平均分
-        g_num1, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-        version_dct1 = {"name": v1}
-        for g in img1_version_grades:
-            g_num1 += 1
-            dem1 += g.dem1
-            dem2 += g.dem2
-            dem3 += g.dem3
-            dem4 += g.dem4
-            dem5 += g.dem5
+        selected = [reso]
+        for v in ver:
+            if reso == 'Category':
+                g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+                version_grade = Grade.objects.filter(img__version = v)
+                version_dct = {"name": v}
+                for g in version_grade:
+                    g_num += 1
+                    dem1 += g.dem1
+                    dem2 += g.dem2
+                    dem3 += g.dem3
+                    dem4 += g.dem4
+                    dem5 += g.dem5
 
-        if g_num1 != 0:
-            version_dct1.update({'data': [round(dem1 / g_num1, 2), round(dem2 / g_num1, 2), round(dem3 / g_num1, 2),
-                                           round(dem4 / g_num1, 2), round(dem5 / g_num1, 2), round((dem1+dem2+dem3+dem4+dem5)/5/g_num1,2)]})
-        data.append(version_dct1)
-        # 版本2平均分
-        g_num2, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-        version_dct2 = {"name": v2}
-        for g in img2_version_grades:
-            g_num2 += 1
-            dem1 += g.dem1
-            dem2 += g.dem2
-            dem3 += g.dem3
-            dem4 += g.dem4
-            dem5 += g.dem5
-        if g_num2 != 0:
-            version_dct2.update({'data': [round(dem1 / g_num2, 2), round(dem2 / g_num2, 2), round(dem3 / g_num2, 2),
-                                            round(dem4 / g_num2, 2), round(dem5 / g_num2, 2), round((dem1+dem2+dem3+dem4+dem5)/5/g_num2,2)]})
-        data.append(version_dct2)
+                if g_num != 0:
+                    version_dct.update({'data': [round(dem1 / g_num, 2), round(dem2 / g_num, 2), round(dem3 / g_num, 2),
+                                                 round(dem4 / g_num, 2), round(dem5 / g_num, 2),
+                                                 round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num, 2)]})
+                data.append(version_dct)
+            else:
+                g_num, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+                version_grade = Grade.objects.filter(img__version=v)
+                resolution_grade = Grade.objects.filter(img__version=v, img__resolution=reso)
+                version_dct = {"name": v}
+                resolution_dct = {"name": v + '_' + reso}
+                for g in version_grade:
+                    g_num += 1
+                    dem1 += g.dem1
+                    dem2 += g.dem2
+                    dem3 += g.dem3
+                    dem4 += g.dem4
+                    dem5 += g.dem5
 
-        # 版本1类别平均分
-        g_num3, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-        resolution_dct1 = {"name": v1 + '_' + reso}
-        for g in img1_resolution_grades:
-            g_num3 += 1
-            dem1 += g.dem1
-            dem2 += g.dem2
-            dem3 += g.dem3
-            dem4 += g.dem4
-            dem5 += g.dem5
-        if g_num3 != 0:
-            resolution_dct1.update({'data': [round(dem1 / g_num3, 2), round(dem2 / g_num3, 2), round(dem3 / g_num3, 2),
-                                          round(dem4 / g_num3, 2), round(dem5 / g_num3, 2),
-                                          round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num3, 2)]})
-        data.append(resolution_dct1)
-
-        # 版本2类别平均分
-        g_num4, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-        resolution_dct1 = {"name": v2 + '_' + reso}
-        for g in img2_resolution_grades:
-            g_num4 += 1
-            dem1 += g.dem1
-            dem2 += g.dem2
-            dem3 += g.dem3
-            dem4 += g.dem4
-            dem5 += g.dem5
-        if g_num4 != 0:
-            resolution_dct1.update({'data': [round(dem1 / g_num4, 2), round(dem2 / g_num4, 2), round(dem3 / g_num4, 2),
-                                             round(dem4 / g_num4, 2), round(dem5 / g_num4, 2),
-                                             round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num4, 2)]})
-        data.append(resolution_dct1)
+                if g_num != 0:
+                    version_dct.update({'data': [round(dem1 / g_num, 2), round(dem2 / g_num, 2), round(dem3 / g_num, 2),
+                                                  round(dem4 / g_num, 2), round(dem5 / g_num, 2),
+                                                  round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num, 2)]})
+                data.append(version_dct)
+                g_num1, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
+                for g in resolution_grade:
+                    g_num1 += 1
+                    dem1 += g.dem1
+                    dem2 += g.dem2
+                    dem3 += g.dem3
+                    dem4 += g.dem4
+                    dem5 += g.dem5
+                if g_num1 != 0:
+                    resolution_dct.update({'data': [round(dem1 / g_num1, 2), round(dem2 / g_num1, 2), round(dem3 / g_num1, 2),
+                                                  round(dem4 / g_num1, 2), round(dem5 / g_num1, 2),
+                                                  round((dem1 + dem2 + dem3 + dem4 + dem5) / 5 / g_num1, 2)]})
+                data.append(resolution_dct)
 
         context.update({'series': json.dumps(data)})
     context['selected'] = selected
