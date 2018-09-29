@@ -15,6 +15,13 @@
 <script src="/static/js/jquery-2.1.1.js"></script>
 <script src="/static/js/ImageCompare.js"></script>
 <script src="/static/js/highcharts.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+
+<!-- 需要保存导出功能模块文件是在 highcharts.js 之后引入 -->
+<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+
+<!-- 客户端导出功能模块为可选选项 -->
+<script src="http://cdn.hcharts.cn/highcharts/modules/offline-exporting.js"></script>
 <!-- bootstrap-table -->
 <link href="/static/css/bootstrap-table.css" rel="stylesheet">
 <script src="/static/js/bootstrap-table.js"></script>
@@ -147,29 +154,6 @@ margin: 20px;
 </div>
 {% endif %}
 
-<script>
-
-var checkedIds= [];//保存选中的id，亦适用于分页
-
-/* 将选中的数据ID保存*/
-function submitcheck(){
-    if($(this).is(":checked")){
-         checkedIds.push($(this).attr("id"));
-     }else{
-         for(var i=0; i<checkedIds.length; i++){
-             if($(this).attr("id") == checkedIds[i]){
-             checkedIds.splice(i, 1);
-             break;
-             }
-         }
-     }
- });
-
----------------------
-
-本文来自 yaksok 的CSDN 博客 ，全文地址请点击：https://blog.csdn.net/yaksok/article/details/48706719?utm_source=copy
-
-</script>
 <script language="JavaScript">
 $(document).ready(function() {
    var title = {
