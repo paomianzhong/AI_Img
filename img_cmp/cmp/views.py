@@ -75,7 +75,7 @@ def compare2(request, project):
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v)
             numbers = list(range(1, len(imgs) + 1))
-            num = request.GET['number'].zfill(4)
+            num = request.GET['number'].zfill(2)
             img = Image.objects.get(project=project, version=v, name__startswith=num)
             context.update({'img': img})
             selected = [v, num]
@@ -371,28 +371,48 @@ def chart1(request,project):
     context.update(choices)
     versions = Image.get_version(project)
     context.update({"versions": versions})
-    selected = ['Version', 'Category', '1']
-    numbers = list(range(1, 21))
-    if request.method == 'POST':
-        data = []
-        ver = request.POST.get('img_version')
-        reso = request.POST.get('category')
-        num = request.POST.get('number').zfill(2)
-        try:
+    if project == 'Mark':
+        selected = ['Version', '1']
+        numbers = list(range(1, 21))
+        if request.method == 'POST':
+            data = []
+            ver = request.POST.get('img_version')
+            num = request.POST.get('number').zfill(4)
+            try:
+                img = Image.objects.get(project=project, version=ver, name__startswith=num)
+                selected = [ver, num]
+                img_for_grade = Image.objects.get(pk=img.id)
+                grades = Grade.objects.filter(img=img_for_grade)
+                i = 1
+                for g in grades:
+                    dct = {"name": "评测"+str(i)}
+                    dct.update({"data": [g.dem1, g.dem2, g.dem3, g.dem4]})
+                    data.append(dct)
+                    i +=1
+                context.update({'series': json.dumps(data)})
+                print(context)
+            except Image.DoesNotExist:
+                pass
+        context.update({"numbers": numbers, "selected": selected})
+        return render(request, "chart2.html", context)
+    else:
+        selected = ['Version', 'Category', '1']
+        numbers = list(range(1, 21))
+        if request.method == 'POST':
+            data = []
+            ver = request.POST.get('img_version')
+            reso = request.POST.get('category')
+            num = request.POST.get('number').zfill(2)
             img = Image.objects.get(project=project, version=ver, resolution=reso, name__startswith=num)
             selected = [ver, reso, num]
             img_for_grade = Image.objects.get(pk=img.id)
-
             grades = Grade.objects.filter(img=img_for_grade)
             i = 1
             for g in grades:
-
-                dct = {"name": "评测"+str(i)}
+                dct = {"name": "评测" + str(i)}
                 dct.update({"data": [g.dem1, g.dem2, g.dem3, g.dem4, g.dem5]})
                 data.append(dct)
-                i +=1
+                i += 1
             context.update({'series': json.dumps(data)})
-        except Image.DoesNotExist:
-            pass
-    context.update({"numbers": numbers, "selected": selected})
-    return render(request, "chart1.html", context)
+        context.update({"numbers": numbers, "selected": selected})
+        return render(request, "chart1.html", context)

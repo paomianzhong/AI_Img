@@ -1,0 +1,222 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block header-content %}
+<link rel="stylesheet" href="/static/css/ImageCompare.css">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<script src="/static/js/modernizr.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/ImageCompare.js"></script>
+<script src="/static/js/highcharts.js"></script>
+<!-- bootstrap-table -->
+<link href="/static/css/bootstrap-table.css" rel="stylesheet">
+<script src="/static/js/bootstrap-table.js"></script>
+
+{{ script|safe }}
+{% endblock %}
+<head>
+<style>
+.collapse1{
+        background-color:#0b0c0c;
+        width: 100%;
+        min-width: 1024px;
+        height: 48px;
+        max-height: 44px;
+        right: 0;
+        left: 0;
+        z-index: 9999;
+        display: block;
+        margin: 0;
+        font-size: 17px;
+        padding-right: 20px;
+        padding-left: 240px;
+
+
+}
+li a{
+margin: 20px;
+}
+.ac-gn-link-text{
+    color:#FFFFFF;
+
+     font-size: 1em;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: inherit;
+}
+</style>
+</head>
+<!-- Navigation Bar -->
+<nav class="navbar  navbar-expand-lg">
+  <div  class="collapse1 navbar-collapse" >
+        <li>
+	<a href="http://10.100.51.45:8020/">
+        <img src="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/%E9%87%91%E5%B1%B1%E4%BA%911logo.jpeg" height=30 width=40/>
+	</a>
+        </li>
+        <li class="ac-gn-item ac-gn-item-menu ac-gn-support">
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/AI-case/" data-analytics-title="support">
+            <span class="ac-gn-link-text">KIE</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/Zhaidai_Project/" data-analytics-title="support">
+            <span class="ac-gn-link-text">画质增强</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/new/Mark/" data-analytics-title="support">
+            <span class="ac-gn-link-text">训练集</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://120.92.218.10:8223/diff2#" data-analytics-title="support">
+            <span class="ac-gn-link-text">窄带视频</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/files/upload2" data-analytics-title="support">
+            <span class="ac-gn-link-text">上传</span>
+        </a>
+        </li>
+  </div>
+</nav>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse">
+    <form class="form-inline" method="post">
+        {% csrf_token %}
+      <label class="my-1 mr-2">Img</label>
+      <select id="version" class="custom-select my-1 mr-sm-2" name="img_version">
+        <option selected>{{ selected.0 }}</option>
+        {% for v in versions %}
+        <option value="{{ v }}">{{ v }}</option>
+        {% endfor %}
+      </select>
+        <!--<select class="custom-select my-1 mr-sm-2" name="category">-->
+        <!--<option selected>{{ selected.1 }}</option>-->
+        <!--{% for r in resolutions %}-->
+        <!--<option value="{{ r }}">{{ r }}</option>-->
+        <!--{% endfor %}-->
+      <!--</select>-->
+      <select id="number" class="custom-select my-1 mr-sm-2" name="number">
+        <option selected>{{ selected.1 }}</option>
+        {% for r in numbers %}
+        <option value="{{ r }}">{{ r }}</option>
+        {% endfor %}
+      </select>
+
+      <button id="new-submit" type="submit" class="btn btn-primary my-1" style="float:right;margin-right:10px;">Submit</button>
+    </form>
+
+      <form class="form-inline">
+        <button class="btn btn-primary my-1"  style="float:right;margin-right:10px;" onclick="change_image('next')">下一张</button>
+        <button class="btn btn-primary my-1" onclick="change_image('last')">上一张</button>
+    </form>
+  </div>
+    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
+</nav>
+
+<div id="container" style="width: 550px; height: 400px; margin: 0 auto"></div>
+<!-- Modal -->
+{% if img %}
+<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="gradeModalLabel">{{ img.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" class="form">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          {% buttons %}
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+    function change_image(txt){
+        var se = document.getElementById("number");
+        var index = se.selectedIndex;
+        var value = se.options[index].value;
+        var all_options = se.options;
+        if (txt == 'next'){
+            if (value == '20'){
+                alert("已经是最后一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) + 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }else{
+            if (value == '1' || value == '01'){
+                alert("已经是第一张图了!");
+            }else{
+                for (i=0; i< all_options.length; i++){
+                    if (all_options[i].value == String(Number(value) - 1)){
+                        all_options[i].selected = true;
+                    }
+                }
+                document.getElementById("new-submit").click();
+            }
+        }
+        document.forms[1].target="rfFrame";
+    }
+</script>
+<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '分数'
+        },
+        xAxis: {
+            categories: ['对焦', '清晰', '曝光', '颜值']
+        },
+        credits: {
+            enabled: true
+        },
+        plotOptions: {
+            column: {
+                // 关于柱状图数据标签的详细配置参考：https://api.hcharts.cn/highcharts#plotOptions.column.dataLabels
+                dataLabels: {
+                    enabled: true,
+                    // verticalAlign: 'top', // 竖直对齐方式，默认是 center
+                    inside: true
+                }
+            }
+        },
+        series : {{series|safe}}
+    });
+});
+</script>
+{# Read the documentation for more information #}
