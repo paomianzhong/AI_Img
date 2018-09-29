@@ -365,3 +365,34 @@ def chart(request,project):
     return render(request, "chart.html", context)
 
 
+def chart1(request,project):
+    context = {'project': project}
+    choices = Image.category(project)
+    context.update(choices)
+    versions = Image.get_version(project)
+    context.update({"versions": versions})
+    selected = ['Version', 'Category', '1']
+    numbers = list(range(1, 21))
+    if request.method == 'POST':
+        data = []
+        ver = request.POST.get('img_version')
+        reso = request.POST.get('category')
+        num = request.POST.get('number').zfill(2)
+        try:
+            img = Image.objects.get(project=project, version=ver, resolution=reso, name__startswith=num)
+            selected = [ver, reso, num]
+            img_for_grade = Image.objects.get(pk=img.id)
+
+            grades = Grade.objects.filter(img=img_for_grade)
+            i = 1
+            for g in grades:
+
+                dct = {"name": "评测"+str(i)}
+                dct.update({"data": [g.dem1, g.dem2, g.dem3, g.dem4, g.dem5]})
+                data.append(dct)
+                i +=1
+            context.update({'series': json.dumps(data)})
+        except Image.DoesNotExist:
+            pass
+    context.update({"numbers": numbers, "selected": selected})
+    return render(request, "chart1.html", context)

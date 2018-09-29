@@ -7,6 +7,7 @@ urlpatterns = [
     path('insert', views.insert, name='insert'),
     path('up', views.up, name='up'),
     path('chart/<str:project>/', views.chart, name='chart'),
+    path('chart1/<str:project>/', views.chart1, name='chart1'),
     path('files/upload2/', views.fileupload, name='图片分片上传'),
     path('fileMerge/', views.fileMerge, name='上传成功合并'),
     path('cmp/<str:project>/', views.compare, name='cmp'),
