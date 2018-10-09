@@ -78,18 +78,18 @@ margin: 20px;
   </div>
 </nav>
 <body>
-<p>批量上传图片并插入信息到数据库</p>
+<p>批量上传图片并插入信息到数据库，点击提交后需耐心等待直至跳转上传成功</p>
 <form action="up"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
-    是否重命名(图片名称前三位非数字时需要重命名)：
-    <input type="radio" name="rename" value="1">是
+    是否重命名(默认需要重命名)：
+    <input type="radio" name="rename" value="1" checked="checked">是
     <input type="radio" name="rename" value="0">否<br>
     项目名称:
-    <input type="radio" name="project" value="AI_Project">AI_Project
-    <input type="radio" name="project" value="Zhaidai_Project">Zhaidai_Project
-    <input type="radio" name="project" value="Mark">Mark
-    <input type="radio" name="project" value="Set">Set<br>
-    平台(Zhaidai_Project选填)：<input type="radio" name="platform" value="Android">Android
+    <input type="radio" name="project" value="AI-Case">图片对比
+    <input type="radio" name="project" value="Zhaidai_Project">图片打分
+    <input type="radio" name="project" value="Mark">Mark(不分类训练集)
+    <input type="radio" name="project" value="Set">Set(分类训练集)<br>
+    平台(选填)：<input type="radio" name="platform" value="Android">Android
     <input type="radio" name="platform" value="Android">IOS
     <input type="radio" name="platform" value="Android">Server<br>
     版本：<input type="text" name="version"><br>
