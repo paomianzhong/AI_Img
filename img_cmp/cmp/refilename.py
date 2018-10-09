@@ -11,10 +11,10 @@ def refilename(path):
         filename = os.path.splitext(item)[0]  # 文件名
         filetype = os.path.splitext(item)[1]  # 文件扩展名
         src = os.path.join(os.path.abspath(path), item)
-        if i<1000:
-            dst = os.path.join(os.path.abspath(path), '0'+format(str(i), '0>3s') +filename+filetype)
+        if i < 1000:
+            dst = os.path.join(os.path.abspath(path), '0'+format(str(i), '0>3s') + '_' + filename + filetype)
         else:
-            dst = os.path.join(os.path.abspath(path), format(str(i), '0>3s') + filename + filetype)
+            dst = os.path.join(os.path.abspath(path), format(str(i), '0>3s') + '_' + filename + filetype)
         os.rename(src, dst)
         i = i + 1
 
