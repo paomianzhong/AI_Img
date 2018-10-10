@@ -1,0 +1,303 @@
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block header-content %}
+<link rel="stylesheet" href="/static/css/ImageCompare.css">
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<script src="/static/js/modernizr.js"></script>
+<script src="/static/js/jquery-2.1.1.js"></script>
+<script src="/static/js/ImageCompare.js"></script>
+<script src="/static/js/highcharts.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/jquery/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
+
+
+<!-- 需要保存导出功能模块文件是在 highcharts.js 之后引入 -->
+<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+
+<!-- 客户端导出功能模块为可选选项 -->
+<script src="http://cdn.hcharts.cn/highcharts/modules/offline-exporting.js"></script>
+<!-- bootstrap-table -->
+<link href="/static/css/bootstrap-table.css" rel="stylesheet">
+<script src="/static/js/bootstrap-table.js"></script>
+
+{{ script|safe }}
+{% endblock %}
+<head>
+<style>
+.collapse1{
+        background-color:#0b0c0c;
+        width: 100%;
+        min-width: 1024px;
+        height: 48px;
+        max-height: 44px;
+        right: 0;
+        left: 0;
+        z-index: 9999;
+        display: block;
+        margin: 0;
+        font-size: 17px;
+        padding-right: 20px;
+        padding-left: 240px;
+
+
+}
+li a{
+margin: 20px;
+}
+.ac-gn-link-text{
+    color:#FFFFFF;
+
+     font-size: 1em;
+    font-family: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+    text-align: inherit;
+}
+</style>
+</head>
+
+<nav class="navbar  navbar-expand-lg">
+  <div  class="collapse1 navbar-collapse" >
+        <li>
+	<a href="http://10.100.51.45:8020/">
+        <img src="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/%E9%87%91%E5%B1%B1%E4%BA%911logo.jpeg" height=30 width=40/>
+	</a>
+        </li>
+        <li class="ac-gn-item ac-gn-item-menu ac-gn-support">
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/AI-case/" data-analytics-title="support">
+            <span class="ac-gn-link-text">KIE</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/Zhaidai_Project/" data-analytics-title="support">
+            <span class="ac-gn-link-text">画质增强</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/new/Mark/" data-analytics-title="support">
+            <span class="ac-gn-link-text">训练集</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://120.92.218.10:8223/diff2#" data-analytics-title="support">
+            <span class="ac-gn-link-text">窄带视频</span>
+        </a>
+        </li>
+        <li>
+        <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/files/upload2" data-analytics-title="support">
+            <span class="ac-gn-link-text">上传</span>
+        </a>
+        </li>
+  </div>
+</nav>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="collapse navbar-collapse">
+    <form class="form-inline" method="post">
+        {% csrf_token %}
+        <select id="platform" onchange="change_version()" class="custom-select my-1 mr-sm-2" name="img_platform">
+        <option selected>{{ selected.0 }}</option>
+          {% for p in platforms %}
+        <option value="{{ p }}">{{ p }}</option>
+          {% endfor %}
+      </select>
+
+      <select id="version" class="custom-select my-1 mr-sm-2" name="img_version">
+        <option selected>{{ selected.1 }}</option>
+      </select>
+
+      <button id="new-submit" type="submit" class="btn btn-primary my-1">Submit</button>
+    </form>
+  </div>
+
+    <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
+</nav>
+<body>
+    <div id="container" style="width: 750px; height: 400px; margin: 0 auto"></div><br>
+    <div id="container2" style="width: 750px; height: 400px; margin: 0 auto"></div><br>
+    <div id="container3" style="width: 750px; height: 400px; margin: 0 auto"></div><br>
+<script>
+    function change_version(){
+
+        var s1 = document.getElementById("platform");
+        var value = s1.options[s1.selectedIndex].value;
+        var v = document.getElementById("version");
+        <!--s3_url = eval('https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s1+'/'+v+'/gif_cpu.csv');-->
+        <!--console.log(s3_url);-->
+        var ul = "/api/version/?proj={{ project }}&plat="+value;
+        if (value != 'Platform'){
+            $.ajax({
+                url: ul,
+                type: "get",
+                dataType: "json",
+                success: function(data){
+                    v.length = 0;
+                    var option1 = document.createElement("option");
+                    option1.name = "Version";
+                    option1.innerHTML = "Version";
+                    option1.value = "Version";
+                    v.appendChild(option1);
+                    for (var name in data.versions){
+                        var option = document.createElement("option");
+                        option.name = name;
+                        option.innerHTML = name;
+                        option.value = data.versions[name];
+                        v.appendChild(option);
+                    }
+                }
+            });
+        }
+    }
+</script>
+    <script type="text/javascript">
+
+        var s = document.getElementById("platform").value;
+        var v = document.getElementById("version").value;
+        <!--https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/IOS/1.0.0.1_xiufu/cpu.csv-->
+        <!--var CPU_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/gif_cpu.csv';-->
+        <!--var MEM_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/gif_mem.csv';-->
+        <!--var TIME_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/gif_time.csv';-->
+        var CPU_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/cpu.csv';
+        var MEM_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/mem.csv';
+        var TIME_URL = 'https://ks3-cn-beijing.ksyun.com/qa-vod/AI_Project/'+s+'/'+v+'/time.csv';
+        // 初始化配置
+        var options = {
+            chart: {
+                renderTo: 'container'
+            },
+            title:{
+                text: 'GIF_CPU(%)'
+            },
+            xAxis: {
+                categories: []
+            },
+            series: []
+        };
+        var option2 = {
+            chart: {
+                renderTo: 'container2'
+            },
+            title:{
+                text: 'GIF_MEM(M)'
+            },
+            xAxis: {
+                categories: []
+            },
+            series: []
+        };
+        var option3 = {
+            chart: {
+                renderTo: 'container3'
+            },
+            title:{
+                text: 'GIF_TIME(s)'
+            },
+            xAxis: {
+                categories: []
+            },
+            series: []
+        };
+
+    $.get(CPU_URL, function(data) {
+        // 读取每行
+        var lines = data.split('\n');
+        $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            if (lineNo == 0) {
+                // 第一行，Categories,Tokyo,New York,Berlin,London
+                $.each(items, function(itemNo, item) {
+                    if (itemNo > 0) {
+                        var serie = {};
+                        serie.name = item;
+                        serie.selected = true;
+                        serie.data = [];
+                        options.series.push(serie);
+                    }
+                });
+            } else {
+                // 其他行 Jan,7.0,-0.2,-0.9,3.9
+                $.each(items, function(itemNo, item) {
+                    if (itemNo == 0) {
+                        options.xAxis.categories.push(item);
+                    } else {
+                        options.series[itemNo - 1].data.push(parseFloat(item));
+                    }
+                });
+            }
+        });
+        var chart = new Highcharts.Chart(options);
+    });
+    $.get(MEM_URL, function(data) {
+        // 读取每行
+        var lines = data.split('\n');
+        $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            if (lineNo == 0) {
+                // 第一行，Categories,Tokyo,New York,Berlin,London
+                $.each(items, function(itemNo, item) {
+                    if (itemNo > 0) {
+                        var serie = {};
+                        serie.name = item;
+                        serie.selected = true;
+                        serie.data = [];
+                        option2.series.push(serie);
+                    }
+                });
+            } else {
+                // 其他行 Jan,7.0,-0.2,-0.9,3.9
+                $.each(items, function(itemNo, item) {
+                    if (itemNo == 0) {
+                        option2.xAxis.categories.push(item);
+                    } else {
+                        option2.series[itemNo - 1].data.push(parseFloat(item));
+                    }
+                });
+            }
+        });
+        var chart = new Highcharts.Chart(option2);
+
+    });
+    $.get(TIME_URL, function(data) {
+        // 读取每行
+        var lines = data.split('\n');
+        $.each(lines, function(lineNo, line) {
+            var items = line.split(',');
+            if (lineNo == 0) {
+                // 第一行，Categories,Tokyo,New York,Berlin,London
+                $.each(items, function(itemNo, item) {
+                    if (itemNo > 0) {
+                        var serie = {};
+                        serie.name = item;
+                        serie.selected = true;
+                        serie.data = [];
+                        option3.series.push(serie);
+                    }
+                });
+            } else {
+                // 其他行 Jan,7.0,-0.2,-0.9,3.9
+                $.each(items, function(itemNo, item) {
+                    if (itemNo == 0) {
+                        option3.xAxis.categories.push(item);
+                    } else {
+                        option3.series[itemNo - 1].data.push(parseFloat(item));
+                    }
+                });
+            }
+        });
+
+        var chart = new Highcharts.Chart(option3);
+    });
+
+
+
+ </script>
+</body>
+</html>

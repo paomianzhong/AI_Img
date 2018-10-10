@@ -416,3 +416,20 @@ def chart1(request,project):
             context.update({'series': json.dumps(data)})
         context.update({"numbers": numbers, "selected": selected})
         return render(request, "chart1.html", context)
+
+
+def performance(request,project):
+    context = {'project': project}
+    choices = Image.category(project)
+    context.update(choices)
+    versions = Image.get_version(project)
+    context.update({"versions": versions})
+    selected = ['Platform', 'Version']
+
+    if request.method == 'POST':
+        plat = request.POST.get('img_platform')
+        ver = request.POST.get('img_version')
+        selected = [plat, ver]
+    context.update({"selected": selected})
+    return render(request, "performance.html", context)
+
