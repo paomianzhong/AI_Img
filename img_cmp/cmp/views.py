@@ -75,7 +75,7 @@ def compare2(request, project):
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v)
             numbers = list(range(1, len(imgs) + 1))
-            num = request.GET['number'].zfill(2)
+            num = request.GET['number'].zfill(4)
             img = Image.objects.get(project=project, version=v, name__startswith=num)
             context.update({'img': img})
             selected = [v, num]
