@@ -236,6 +236,17 @@ def up(request):
         return render(request, "up.html")
 
 
+def up1(request):
+    if request.POST:
+        project = request.POST.get('project', '')
+        version = request.POST.get('version', '')
+        ks3_url = request.POST.get('ks3_url', '')
+        insertdb.insertdb1(project, version, ks3_url)
+        return HttpResponse("上传完成!")
+    else:
+        return render(request, "up1.html")
+
+
 def export(request):
     p, v = request.GET['proj'], request.GET['ver']
     content = Image.export_xls(proj=p, ver=v)
