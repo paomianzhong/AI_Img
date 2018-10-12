@@ -78,22 +78,14 @@ margin: 20px;
   </div>
 </nav>
 <body>
-<p>批量上传图片并插入信息到数据库，点击提交后需耐心等待直至跳转上传成功</p>
-<form action="up"  method="post" enctype="multipart/form-data" >
+<p>先上传视频到KS3，直接在此页面填写ks3地址</p>
+<form action="up1"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
-    是否重命名(默认需要重命名)：
-    <input type="radio" name="rename" value="1" checked="checked">是
-    <input type="radio" name="rename" value="0">否<br>
     项目名称:
-    <input type="radio" name="project" value="AI-Case">图片对比
-    <input type="radio" name="project" value="Zhaidai_Project">图片打分
-    <input type="radio" name="project" value="Mark">Mark(不分类训练集)
-    <input type="radio" name="project" value="Set">Set(分类训练集)
+    <input type="radio" name="project" value="Zhaidai_Project">窄带高清
     <input type="radio" name="project" value="Unpublished">未发布版本<br>
-    平台(选填)：<input type="radio" name="platform" value="Android">Android
-    <input type="radio" name="platform" value="Android">IOS
-    <input type="radio" name="platform" value="Android">Server<br>
     版本号：<input type="text" name="version"><br>
+    KS3地址：<input type="text" name="ks3_url"><br>
     <input type="submit" value="提交">
 
 </form>

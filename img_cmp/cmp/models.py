@@ -216,4 +216,16 @@ class Grade(models.Model):
         return stat
 
 
+class Performance(models.Model):
+    project = models.CharField(max_length=64)
+    platform = models.CharField(max_length=64, default='')
+    version = models.CharField(max_length=64)
+    phone = models.CharField(max_length=64)
+    time_avg = models.FloatField(default=0)
+    time_max = models.FloatField(default=0)
+    cpu_avg = models.FloatField(default=0)
+    cpu_max = models.FloatField(default=0)
+    mem_avg = models.FloatField(default=0)
+    mem_max = models.FloatField(default=0)
+
 

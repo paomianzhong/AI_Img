@@ -39,3 +39,11 @@ def insertdb(localPath, project, platform, version):
                                              version + '/' + resolution[i] + '/' + file}
                     requests.get('http://10.100.51.45:8020/insert', params=payload)
 
+
+def insertdb1(project, version, ks3_url):
+    payload = {'name': ks3_url.split('/')[-1],
+               'project': project,
+               'version': version,
+               's3_url': ks3_url}
+    requests.get('http://10.100.51.45:8020/insert', params=payload)
+
