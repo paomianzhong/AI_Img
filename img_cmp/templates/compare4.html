@@ -123,8 +123,8 @@ margin: 20px;
     </form>
   </div>
     <form class="form-inline my-lg-0">
-        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="modal" data-target="#gradeModal">打分</button>
-        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">查看</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">打分</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">查看</button>
         <a href="/api/export/?proj={{ img.project }}&ver={{ selected.0 }}">
         <button type="button" class="btn btn-primary">导出</button>
         </a>
@@ -132,41 +132,9 @@ margin: 20px;
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
 
-<!-- Modal -->
-{% if img %}
-<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="gradeModalLabel">{{ img.name }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" class="form">
-          {% csrf_token %}
-          {% bootstrap_form form %}
-          {% buttons %}
-          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
-            Submit
-          </button>
-          {% endbuttons %}
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
-
 <!-- Collapse -->
 {% if img %}
-<div class="collapse" id="collapseExample">
+<div class="collapse" id="collapseExample2">
   <div class="panel blank-panel modal-body">
     <table width="40%" align="center">
       <tr>
@@ -186,11 +154,26 @@ margin: 20px;
     </table>
   </div>
 </div>
+<div class="collapse" id="collapseExample1">
+      <div class="modal-body">
+          <div style="float:left;margin-left:45%;">
+        <form method="post" class="form">
+          {% csrf_token %}
+            <p><a href="#" data-toggle="tooltip" title="1-改进空间很大 2-改进空间一般 3-没有改进空间"><b>?</b></a>
+                {{ form.dem1.label }}   {{ form.dem1.0 }}  {{ form.dem1.1 }}  {{form.dem1.2}}  {{ form.dem1.3 }}</p>
+          {% buttons %}
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+          </div>
+      </div>
+</div>
 {% endif %}
 
 <!-- image -->
 {% if img %}
-<br>
 <div>
     <p style="text-align: center;"><img src="{{ img.s3_url }}" /></p>
 </div>

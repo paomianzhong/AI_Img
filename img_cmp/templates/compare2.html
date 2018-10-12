@@ -130,7 +130,8 @@ margin: 20px;
         <button class="btn btn-primary" style="float:right;margin-right:50px;" onclick="change_image('last')">上一张</button>
     </form>
     <form class="form-inline my-lg-0">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#gradeModal" style="background:red;">打分</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">打分</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">查看</button>
         <a href="/api/export/?proj={{ img2.project }}&ver={{ img2.version }}">
         <button type="button" class="btn btn-primary">导出</button>
         </a>
@@ -138,40 +139,9 @@ margin: 20px;
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
 
-<!-- Modal -->
-{% if img2 %}
-<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="gradeModalLabel">{{ img2.name }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" class="form">
-          {% csrf_token %}
-          {% bootstrap_form form %}
-          {% buttons %}
-          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
-            Submit
-          </button>
-          {% endbuttons %}
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
 <!-- grade -->
 {% if img2 %}
-<div>
+<div class="collapse" id="collapseExample2">
     <div class="panel blank-panel modal-body">
         <table width="70%" align="center">
             <tr>
@@ -223,8 +193,31 @@ margin: 20px;
         </table>
     </div>
 </div>
+<div class="collapse" id="collapseExample1">
+      <div class="modal-body">
+          <div style="float:left;margin-left:45%;">
+        <form method="post" class="form">
+          {% csrf_token %}
+            <p><a href="#" data-toggle="tooltip" title="1-严重失真 2-轻微失真 3-不变 4-部分更鲜明 5-大都更鲜明"><b>?</b></a>
+                {{ form.dem1.label }}   {{ form.dem1.0 }}  {{ form.dem1.1 }}  {{form.dem1.2}}  {{ form.dem1.3 }}  {{ form.dem1.4 }}  {{ form.dem1.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-严重失真 2-轻微失真 3-不变 4-部分更合适 5-大都更合适"><b>?</b></a>
+                {{ form.dem2.label }}   {{ form.dem2.0 }}  {{ form.dem2.1 }}  {{form.dem2.2}}  {{ form.dem2.3 }}  {{ form.dem2.4 }}  {{ form.dem2.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-严重失真 2-轻微失真 3-不变 4-部分更清晰 5-大都更清晰"><b>?</b></a>
+                {{ form.dem3.label }}   {{ form.dem3.0 }}  {{ form.dem3.1 }}  {{form.dem3.2}}  {{ form.dem3.3 }}  {{ form.dem3.4 }}  {{ form.dem3.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-显著增强 2-轻微增强 3-不变 4-被减弱 5-被消除"><b>?</b></a>
+                {{ form.dem4.label }}   {{ form.dem4.0 }}  {{ form.dem4.1 }}  {{form.dem4.2}}  {{ form.dem4.3 }}  {{ form.dem4.4 }}  {{ form.dem4.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-显著被模糊或锐化过度 2-轻微被模糊或锐化过度 3-不变 4-部分更清晰 5-大都更清晰"><b>?</b></a>
+                {{ form.dem5.label }}   {{ form.dem5.0 }}  {{ form.dem5.1 }}  {{form.dem5.2}}  {{ form.dem5.3 }}  {{ form.dem5.4 }}  {{ form.dem5.5 }}</p>
+          {% buttons %}
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+          </div>
+      </div>
+</div>
 {% endif %}
-
 
 <!-- image -->
 {% if img2 %}
@@ -269,5 +262,20 @@ margin: 20px;
         }
         document.forms[1].target="rfFrame";
     }
+</script>
+
+<script>
+    <!--$(document).ready(function(){-->
+        <!--$("#info1").mouseenter(function(event){-->
+		    <!--var tooltipHtml = "<div id='tooltip'>Hello！</div>";-->
+		    <!--$(this).append(tooltipHtml);-->
+		    <!--$("#tooltip").css({-->
+			    <!--"top": (event.pageY) + "px",-->
+	            <!--"left": ($(this).width()) + "px"-->
+	        <!--}).show();-->
+	    <!--}).mouseleave(function(){-->
+		    <!--$("#tooltip").remove();-->
+	    <!--})-->
+	<!--})-->
 </script>
 {# Read the documentation for more information #}

@@ -118,8 +118,8 @@ margin: 20px;
     </form>
   </div>
     <form class="form-inline my-lg-0">
-        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="modal" data-target="#gradeModal">打分</button>
-        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">查看</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">打分</button>
+        <button type="button" class="btn btn-primary" style="float:right;margin-right:10px;" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">查看</button>
         <a href="/api/export/?proj={{ img.project }}&ver={{ selected.0 }}">
         <button type="button" class="btn btn-primary">导出</button>
         </a>
@@ -127,41 +127,9 @@ margin: 20px;
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
 
-<!-- Modal -->
-{% if img %}
-<div class="modal fade" id="gradeModal" tabindex="-1" role="dialog" aria-labelledby="gradeModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="gradeModalLabel">{{ img.name }}</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" class="form">
-          {% csrf_token %}
-          {% bootstrap_form form %}
-          {% buttons %}
-          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
-            Submit
-          </button>
-          {% endbuttons %}
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
-{% endif %}
-
-
 <!-- Collapse -->
 {% if img %}
-<div class="collapse" id="collapseExample">
+<div class="collapse" id="collapseExample2">
   <div class="panel blank-panel modal-body">
     <table width="40%" align="center">
       <tr>
@@ -187,11 +155,32 @@ margin: 20px;
     </table>
   </div>
 </div>
+<div class="collapse" id="collapseExample1">
+      <div class="modal-body">
+          <div style="float:left;margin-left:45%;">
+        <form method="post" class="form">
+          {% csrf_token %}
+            <p><a href="#" data-toggle="tooltip" title="1-严重虚焦 2-较多虚焦 3-中度虚焦 4-轻微虚焦 5-没有虚焦"><b>?</b></a>
+                {{ form.dem1.label }}   {{ form.dem1.0 }}  {{ form.dem1.1 }}  {{form.dem1.2}}  {{ form.dem1.3 }}  {{ form.dem1.4 }}  {{ form.dem1.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-严重模糊 2-较多模糊 3-中度模糊 4-轻微模糊 5-没有模糊"><b>?</b></a>
+                {{ form.dem2.label }}   {{ form.dem2.0 }}  {{ form.dem2.1 }}  {{form.dem2.2}}  {{ form.dem2.3 }}  {{ form.dem2.4 }}  {{ form.dem2.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="1-过曝 2-较多曝光 3-中度曝光 4-轻微曝光 5-没有曝光"><b>?</b></a>
+                {{ form.dem3.label }}   {{ form.dem3.0 }}  {{ form.dem3.1 }}  {{form.dem3.2}}  {{ form.dem3.3 }}  {{ form.dem3.4 }}  {{ form.dem3.5 }}</p>
+            <p><a href="#" data-toggle="tooltip" title="自行评定"><b>?</b></a>
+                {{ form.dem4.label }}   {{ form.dem4.0 }}  {{ form.dem4.1 }}  {{form.dem4.2}}  {{ form.dem4.3 }}  {{ form.dem4.4 }}  {{ form.dem4.5 }}</p>
+          {% buttons %}
+          <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
+            Submit
+          </button>
+          {% endbuttons %}
+        </form>
+          </div>
+      </div>
+</div>
 {% endif %}
 
 <!-- image -->
 {% if img %}
-<br>
 <div>
     <p style="text-align: center;"><img src="{{ img.s3_url }}" /></p>
 </div>
