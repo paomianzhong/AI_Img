@@ -79,31 +79,34 @@ class GradeForm(forms.ModelForm):
 
     class Meta:
         model = Grade
-        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'dem5', 'img']
+        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'dem5', 'img', 'comment']
     img = forms.IntegerField(required=False, widget=forms.HiddenInput())
     dem1 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='色调', initial=3)
     dem2 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='亮度', initial=3)
     dem3 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='内容', initial=3)
     dem4 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='噪声', initial=3)
     dem5 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='纹理', initial=3)
+    comment = forms.CharField(required=True, widget=forms.TextInput(), label='评价')
 
 
 class GradeForm2(forms.ModelForm):
 
     class Meta:
         model = Grade
-        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'img']
+        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'img', 'comment']
     img = forms.IntegerField(required=False, widget=forms.HiddenInput())
     dem1 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='对焦', initial=3)
     dem2 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='清晰', initial=3)
     dem3 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='曝光', initial=3)
     dem4 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]), label='颜值', initial=3)
+    comment = forms.CharField(required=True, widget=forms.TextInput(), label='评价')
 
 
 class GradeForm3(forms.ModelForm):
 
     class Meta:
         model = Grade
-        fields = ['dem1', 'img']
+        fields = ['dem1', 'img', 'comment']
     img = forms.IntegerField(required=False, widget=forms.HiddenInput())
     dem1 = forms.IntegerField(required=True, widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), ]), label='改进空间', initial=2)
+    comment = forms.CharField(required=True, widget=forms.TextInput(), label='评价')

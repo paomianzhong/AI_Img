@@ -208,6 +208,8 @@ margin: 20px;
                 {{ form.dem4.label }}   {{ form.dem4.0 }}  {{ form.dem4.1 }}  {{form.dem4.2}}  {{ form.dem4.3 }}  {{ form.dem4.4 }}  {{ form.dem4.5 }}</p>
             <p><a href="#" data-toggle="tooltip" title="1-显著被模糊或锐化过度 2-轻微被模糊或锐化过度 3-不变 4-部分更清晰 5-大都更清晰"><b>?</b></a>
                 {{ form.dem5.label }}   {{ form.dem5.0 }}  {{ form.dem5.1 }}  {{form.dem5.2}}  {{ form.dem5.3 }}  {{ form.dem5.4 }}  {{ form.dem5.5 }}</p>
+            <p><a href="#" data-toggle="tooltip"  title="评价"><b>?</b></a>
+                {{ form.comment.label }}   {{ form.comment }}</p>
           {% buttons %}
           <button type="submit" class="btn btn-primary" name="img_id" value="{{ img2.id }}">
             Submit

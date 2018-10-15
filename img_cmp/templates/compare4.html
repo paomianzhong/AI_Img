@@ -161,6 +161,8 @@ margin: 20px;
           {% csrf_token %}
             <p><a href="#" data-toggle="tooltip" title="1-改进空间很大 2-改进空间一般 3-没有改进空间"><b>?</b></a>
                 {{ form.dem1.label }}   {{ form.dem1.0 }}  {{ form.dem1.1 }}  {{form.dem1.2}}  {{ form.dem1.3 }}</p>
+            <p><a href="#" data-toggle="tooltip"  title="评价"><b>?</b></a>
+                {{ form.comment.label }}   {{ form.comment }}</p>
           {% buttons %}
           <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
             Submit
