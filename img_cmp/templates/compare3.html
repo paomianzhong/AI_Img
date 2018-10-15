@@ -157,7 +157,7 @@ margin: 20px;
 </div>
 <div class="collapse" id="collapseExample1">
       <div class="modal-body">
-          <div style="float:left;margin-left:45%;">
+          <div style="float: left;margin-left: 45%;">
         <form method="post" class="form">
           {% csrf_token %}
             <p><a href="#" data-toggle="tooltip" title="1-严重虚焦 2-较多虚焦 3-中度虚焦 4-轻微虚焦 5-没有虚焦"><b>?</b></a>
@@ -183,8 +183,8 @@ margin: 20px;
 
 <!-- image -->
 {% if img %}
-<div>
-    <p style="text-align: center;"><img src="{{ img.s3_url }}" /></p>
+<div style="float: left;margin-left: 41%;">
+    <p><img src="{{ img.s3_url }}" /></p>
 </div>
 {% endif %}
 
