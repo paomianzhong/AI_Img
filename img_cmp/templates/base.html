@@ -1,0 +1,68 @@
+<html>
+{# Load the tag library #}
+{% load bootstrap4 %}
+
+{# Load CSS and JavaScript #}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% block header-content %}
+<link rel="stylesheet" href="/static/css/index-style.css">
+<!--<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">-->
+<!--<script src="/static/js/modernizr.js"></script>-->
+<script src="/static/js/jquery-2.1.1.js"></script>
+{{ script|safe }}
+{% endblock %}
+<head>
+</head>
+
+<!-- Navigation Bar -->
+<body background="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/test008.gif" style=" background-repeat:no-repeat ; background-size:100% 100%; background-attachment: fixed;">
+<!--<nav class="navbar navbar-expand-lg">-->
+<nav class="navbar navbar-dark bg-dark ">
+    <a href="/">
+        <img src="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/%E9%87%91%E5%B1%B1%E4%BA%911logo.jpeg" height=30 width=40/>
+    </a>
+    <ul class="nav nav-pills nav-fill">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">KIE</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/cmp/AI-case/">发布版本对比</a>
+                <a class="dropdown-item" href="/cmp/Zhaidai_Project/">发布版本评测</a>
+                <a class="dropdown-item" href="/cmp/Unpublished/">未发布版本评测</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">测试集评测</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/new/Mark/">KIE测试集</a>
+                <a class="dropdown-item" href="/new/Set/">DPED测试集</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="http://120.92.218.10:8223/diff2#">视频评测</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">数据图表</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/chart/Zhaidai_Project/">版本平均分</a>
+                <a class="dropdown-item" href="/chart1/Zhaidai_Project/">单图多人评分</a>
+                <a class="dropdown-item" href="/performance/AI-case/">性能数据展示</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">上传</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/files/upload2">图片</a>
+                <a class="dropdown-item" href="/up1">视频</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% block panel %}{% endblock %}
+{% block content %}{% endblock %}
+</body>
+</html>
