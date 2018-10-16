@@ -156,7 +156,7 @@ margin: 20px;
 </div>
 <div class="collapse" id="collapseExample1">
       <div class="modal-body">
-          <div style="float:left;margin-left:45%;">
+          <div style="position: relative;left: 45%;">
         <form method="post" class="form">
           {% csrf_token %}
             <p><a href="#" data-toggle="tooltip" title="1-改进空间很大 2-改进空间一般 3-没有改进空间"><b>?</b></a>
@@ -176,8 +176,8 @@ margin: 20px;
 
 <!-- image -->
 {% if img %}
-<div>
-    <p style="text-align: center;"><img src="{{ img.s3_url }}" /></p>
+<div style="position: relative;text-align: center;">
+    <p><img src="{{ img.s3_url }}" /></p>
 </div>
 {% endif %}
 
