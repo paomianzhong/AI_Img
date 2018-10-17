@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('insert', views.insert, name='insert'),
     path('up', views.up, name='up'),
     path('up1', views.up1, name='up1'),
     path('performance/<str:project>/', views.performance, name='performance'),
@@ -15,8 +14,11 @@ urlpatterns = [
     path('cmp/<str:project>/', views.compare, name='cmp'),
     path('new/<str:project>/', views.compare2, name='compare2'),
     path('grade/<int:pid>/', views.grade, name='grade'),
+
     path('api/grade/<int:pid>/', views.grade2, name='grade2'),
+    path('insert', views.insert, name='insert'),
     path('api/export/', views.export, name='export'),
+    path('api/ssim/', views.get_ssim, name='ssim'),
     path('api/version/', views.update_version, name='version'),
     path('api/resolution/', views.update_resolution, name='resolution'),
 ]

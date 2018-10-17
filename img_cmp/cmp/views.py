@@ -10,6 +10,7 @@ from django.shortcuts import render_to_response
 
 from .models import Image, Grade
 from .forms import GradeForm, GradeForm2, GradeForm3
+from .tools import cal_ssim
 
 from django.views.decorators.csrf import csrf_exempt
 from . import upfile
@@ -191,6 +192,17 @@ def insert(request):
         return HttpResponse(json.dumps({'result': 'ok'}))
     except Exception as e:
         return HttpResponse(json.dumps({'result': e}))
+
+
+def get_ssim(request):
+    try:
+        data = request.GET.dict()
+        img1 = Image.objects.get(pk=data['img1'])
+        img2 = Image.objects.get(pk=data['img2'])
+        with cal_ssim(img1.s3_url, img2.s3_url) as v
+            return HttpResponse(json.dumps({'ssim': v}))
+    except Exception as e:
+        return HttpResponse(json.dumps({'msg': e}))
 
 
 def up(request):
