@@ -3,6 +3,7 @@
 
 {% block header-content %}
 <link rel="stylesheet" href="/static/css/ImageCompare.css">
+<link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="/static/js/ImageCompare.js"></script>
 
 <!-- bootstrap-table -->
@@ -83,9 +84,9 @@
           <div style="position: relative;left: 45%;">
         <form method="post" class="form">
           {% csrf_token %}
-            <p><a href="#" data-toggle="tooltip" title="1-改进空间很大 2-改进空间一般 3-没有改进空间"><b>?</b></a>
+            <p><a href="#" data-toggle="tooltip" title="1-改进空间很大 2-改进空间一般 3-没有改进空间"><span class="glyphicon glyphicon-question-sign"></span></a>
                 {{ form.dem1.label }}   {{ form.dem1.0 }}  {{ form.dem1.1 }}  {{form.dem1.2}}  {{ form.dem1.3 }}</p>
-            <p><a href="#" data-toggle="tooltip"  title="评价"><b>?</b></a>
+            <p><a href="#" data-toggle="tooltip"  title="评价"><span class="glyphicon glyphicon-question-sign"></span></a>
                 {{ form.comment.label }}   {{ form.comment }}</p>
           {% buttons %}
           <button type="submit" class="btn btn-primary" name="img_id" value="{{ img.id }}">
