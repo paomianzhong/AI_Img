@@ -199,7 +199,7 @@ def get_ssim(request):
         data = request.GET.dict()
         img1 = Image.objects.get(pk=data['img1'])
         img2 = Image.objects.get(pk=data['img2'])
-        with cal_ssim(img1.s3_url, img2.s3_url) as v
+        with cal_ssim(img1.s3_url, img2.s3_url) as v:
             return HttpResponse(json.dumps({'ssim': v}))
     except Exception as e:
         return HttpResponse(json.dumps({'msg': e}))
