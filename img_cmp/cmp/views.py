@@ -185,26 +185,6 @@ def grade2(request, pid):
     return HttpResponse(json.dumps(data))
 
 
-def insert(request):
-    try:
-        data = request.GET.dict()
-        Image.objects.create(**data)
-        return HttpResponse(json.dumps({'result': 'ok'}))
-    except Exception as e:
-        return HttpResponse(json.dumps({'result': e}))
-
-
-def get_ssim(request):
-    try:
-        data = request.GET.dict()
-        img1 = Image.objects.get(pk=data['img1'])
-        img2 = Image.objects.get(pk=data['img2'])
-        with cal_ssim(img1.s3_url, img2.s3_url) as v:
-            return HttpResponse(json.dumps({'ssim': v}))
-    except Exception as e:
-        return HttpResponse(json.dumps({'msg': e}))
-
-
 def up(request):
     if request.POST:
         isrename = request.POST.get('rename','')
@@ -258,14 +238,6 @@ def up1(request):
     else:
         return render(request, "up1.html")
 
-
-def export(request):
-    p, v = request.GET['proj'], request.GET['ver']
-    content = Image.export_xls(proj=p, ver=v)
-    response = HttpResponse(content)
-    response['Content-Type'] = 'application/vnd.ms-excel'
-    response['Content-Disposition'] = 'attachment;filename="{}.xls"'.format(v)
-    return response
 
 
 @csrf_exempt

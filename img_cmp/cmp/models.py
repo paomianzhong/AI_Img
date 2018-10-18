@@ -15,15 +15,16 @@ class Image(models.Model):
     resolution = models.CharField(max_length=64) # for some project this field represent category
     s3_url = models.CharField(max_length=4096)
     # ssim value compare to the origin image
-    ssim = models.FloatField(default=0.0, null=True)
+    ssim = models.FloatField(default=0.0, blank=True, null=True)
     # if this image is improved over the previous version. 1: True, -1:False
-    improved = models.IntegerField(default=0, null=True)
+    improved = models.IntegerField(default=0, blank=True, null=True)
 
     def get_improved(self):
-        return self.ifimproved >= 0
+        return self.improved >= 0
 
     def add_improved(self, mark):
-        self.ifimproved += mark
+        self.improved += mark
+        self.save()
 
     def __str__(self):
         return self.name
