@@ -117,72 +117,7 @@ def compare2(request, project):
         context.update({"numbers": numbers, "selected": selected})
         return render(request, 'compare4.html', context)
 
-def grade(request,pid):
-    data = []
-    g_num1, dem1, dem2, dem3, dem4, dem5, agv = 0, 0, 0, 0, 0, 0, 0
-    # pid = request.GET['']
-    v = request.GET['version']
-    c = request.GET['category']
-    img = Image.objects.get(pk=pid)
 
-    grades = Grade.objects.filter(img=img)
-    resolution_grades = Grade.objects.filter(img__version=v, img__resolution=c)
-    version_grades =Grade.objects.filter(img__version=v)
-
-
-    dct = {"version": img.name}
-    for g in grades:
-        g_num1 += 1
-        dem1 += g.dem1
-        dem2 += g.dem2
-        dem3 += g.dem3
-        dem4 += g.dem4
-        dem5 += g.dem5
-    if g_num1 != 0:
-        dct.update({"dem1": round(dem1/g_num1, 2), "dem2": round(dem2/g_num1, 2), "dem3": round(dem3/g_num1, 2),
-                    "dem4": round(dem4/g_num1, 2), "dem5": round(dem5/g_num1, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num1,2)})
-    data.append(dct)
-
-    g_num2, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-    resolution_dct = {"version": c}
-    for g in resolution_grades:
-        g_num2 += 1
-        dem1 += g.dem1
-        dem2 += g.dem2
-        dem3 += g.dem3
-        dem4 += g.dem4
-        dem5 += g.dem5
-    if g_num2 != 0:
-        resolution_dct.update({"dem1": round(dem1/g_num2, 2), "dem2": round(dem2/g_num2, 2), "dem3": round(dem3/g_num2, 2),
-                    "dem4": round(dem4/g_num2, 2), "dem5": round(dem5/g_num2, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num2,2)})
-    data.append(resolution_dct)
-
-    g_num3, dem1, dem2, dem3, dem4, dem5 = 0, 0, 0, 0, 0, 0
-    version_dct = {"version": v}
-    for g in version_grades:
-        g_num3 += 1
-        dem1 += g.dem1
-        dem2 += g.dem2
-        dem3 += g.dem3
-        dem4 += g.dem4
-        dem5 += g.dem5
-    if g_num3 != 0:
-        version_dct.update(
-            {"dem1": round(dem1 / g_num3, 2), "dem2": round(dem2 / g_num3, 2), "dem3": round(dem3 / g_num3, 2),
-             "dem4": round(dem4 / g_num3, 2), "dem5": round(dem5 / g_num3, 2), "agv": round((dem1+dem2+dem3+dem4+dem5)/5/g_num3,2)})
-    data.append(version_dct)
-    return HttpResponse(json.dumps(data))
-
-
-def grade2(request, pid):
-    data = []
-    img = Image.objects.get(pk=pid)
-    grades = Grade.objects.filter(img=img)
-    for g in grades:
-        dct = {}
-        dct.update({"date": g.date.strftime("%Y-%m-%d %H:%M:%S"), "dem1": g.dem1, "dem2": g.dem2, "dem3": g.dem3, "dem4": g.dem4})
-        data.append(dct)
-    return HttpResponse(json.dumps(data))
 
 
 def up(request):

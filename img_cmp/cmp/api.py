@@ -16,17 +16,32 @@ def insert(request):
 
 def grade(request, pid):
     # 打分
-    if request.POST:
+    if request.method == 'POST':
         data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
-        data['img'] = Image.objects.get(pk=request.POST['img_id'])
+        data['img'] = Image.objects.get(pk=pid)
         data['date'] = arrow.arrow.datetime.now()
         Grade.objects.create(**data)
         return HttpResponse(json.dumps({'result': 'ok'}))
     # 获取平均分
-    elif request.GET:
-        # TODO
-        pass
+    if request.method == 'GET':
+        img = Image.objects.get(pk=pid)
+        data = []
+        data.append(Grade.get_average(img))
+        data.append(Grade.get_average(img, category=True))
+        data.append(Grade.get_average(img, version=True))
+        print(data)
+        return HttpResponse(json.dumps(data))
 
+def grade2(request, pid):
+    """获取图片的评分记录"""
+    data = []
+    img = Image.objects.get(pk=pid)
+    grades = Grade.objects.filter(img=img)
+    for g in grades:
+        dct = {}
+        dct.update({"date": g.date.strftime("%Y-%m-%d %H:%M:%S"), "dem1": g.dem1, "dem2": g.dem2, "dem3": g.dem3, "dem4": g.dem4})
+        data.append(dct)
+    return HttpResponse(json.dumps(data))
 
 def get_ssim(request):
     """

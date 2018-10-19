@@ -3,6 +3,7 @@ from django.db import models
 from collections import defaultdict
 from operator import itemgetter, add
 from functools import reduce
+from pandas import DataFrame
 import arrow
 import tablib
 
@@ -225,6 +226,33 @@ class Grade(models.Model):
             avg = round(sum(v)/len(v), 2)
             v.append(avg)
         return stat
+
+    @classmethod
+    def get_average(cls, img, category=False, version=False):
+        getter = itemgetter('dem1','dem2','dem3','dem4','dem5')
+        if category:
+            grades = Grade.objects.filter(img__project=img.project, img__version=img.version, img__resolution=img.resolution)
+            stat = [getter(grade.__dict__) for grade in grades]
+            return cls._calc_avg(img.resolution, stat)
+        if version:
+            grades = Grade.objects.filter(img__project=img.project, img__version=img.version)
+            stat = [getter(grade.__dict__) for grade in grades]
+            return cls._calc_avg(img.version, stat)
+        grades = Grade.objects.filter(img=img)
+        stat = [getter(grade) for grade in grades]
+        return cls._calc_avg(img.name, stat)
+
+    @staticmethod
+    def _calc_avg(ver, data):
+        ret = {'version': ver}
+        if not data:
+            return ret
+        header = ('dem1','dem2','dem3','dem4','dem5')
+        df = DataFrame(data, columns=header)
+        avg_dict = dict(zip(header, df.mean().round(2)))
+        ret.update(avg_dict)
+        ret.update({'avg': df.mean().mean().round(2)})
+        return ret
 
 
 class Performance(models.Model):

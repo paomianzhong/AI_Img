@@ -70,7 +70,7 @@
         <table width="70%" align="center">
             <tr>
                 <td width="45%" style="float: left;margin: 0px;padding: 0px;">
-                    <table data-toggle="table" data-url="/grade/{{ img1.id }}?version={{ img1.version}}&category={{ img1.resolution }}" >
+			<table data-toggle="table" data-url="/api/grade/{{ img1.id }}" >
                         <thead>
                         <tr>
                             <th data-field="version">
@@ -85,14 +85,14 @@
                                 <div class="th-inner">噪声</div></th>
                             <th data-field="dem5">
                                 <div class="th-inner">纹理</div></th>
-                            <th data-field="agv">
+                            <th data-field="avg">
                                 <div class="th-inner">平均分</div></th>
                         </tr>
                         </thead>
                     </table>
                 </td>
                 <td width="45%" style="float: right;margin: 0px;padding: 0px;">
-                    <table data-toggle="table" data-url="/grade/{{ img2.id }}?version={{ img2.version}}&category={{ img2.resolution }}" >
+			<table data-toggle="table" data-url="/api/grade/{{ img2.id }}" >
                         <thead>
                         <tr>
                             <th data-field="version">
@@ -107,7 +107,7 @@
                                 <div class="th-inner">噪声</div></th>
                             <th data-field="dem5">
                                 <div class="th-inner">纹理</div></th>
-                            <th data-field="agv">
+                            <th data-field="avg">
                                 <div class="th-inner">平均分</div></th>
                         </tr>
                         </thead>

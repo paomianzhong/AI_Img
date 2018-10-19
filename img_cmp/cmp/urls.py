@@ -14,10 +14,10 @@ urlpatterns = [
     path('fileMerge/', views.fileMerge, name='上传成功合并'),
     path('cmp/<str:project>/', views.compare, name='cmp'),
     path('new/<str:project>/', views.compare2, name='compare2'),
-    path('grade/<int:pid>/', views.grade, name='grade'),
 
-    path('api/grade/<int:pid>/', views.grade2, name='grade2'),
-    path('insert', api.insert, name='insert'),
+    path('api/grade/<int:pid>/', api.grade, name='grade'),
+    path('api/grade2/<int:pid>/', api.grade2, name='grade_detail'),
+    path('api/insert', api.insert, name='insert'),
     path('api/export/', api.export, name='export'),
     path('api/ssim/', api.get_ssim, name='ssim'),
     path('api/version/', views.update_version, name='version'),
