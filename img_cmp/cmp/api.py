@@ -1,6 +1,9 @@
 import json
 from .models import Image, Grade
+from .tools import cal_ssim
 from django.shortcuts import render, HttpResponse
+import arrow
+
 
 def insert(request):
     """
@@ -20,6 +23,7 @@ def grade(request, pid):
         data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
         data['img'] = Image.objects.get(pk=pid)
         data['date'] = arrow.arrow.datetime.now()
+        data['comment'] = request.POST['comment']
         Grade.objects.create(**data)
         return HttpResponse(json.dumps({'result': 'ok'}))
     # 获取平均分
@@ -32,6 +36,7 @@ def grade(request, pid):
         print(data)
         return HttpResponse(json.dumps(data))
 
+
 def grade2(request, pid):
     """获取图片的评分记录"""
     data = []
@@ -42,6 +47,7 @@ def grade2(request, pid):
         dct.update({"date": g.date.strftime("%Y-%m-%d %H:%M:%S"), "dem1": g.dem1, "dem2": g.dem2, "dem3": g.dem3, "dem4": g.dem4})
         data.append(dct)
     return HttpResponse(json.dumps(data))
+
 
 def get_ssim(request):
     """
