@@ -17,8 +17,15 @@ class Image(models.Model):
     s3_url = models.CharField(max_length=4096)
     # ssim value compare to the origin image
     ssim = models.FloatField(default=0.0, blank=True, null=True)
+    # vmaf value compare to the origin image
+    vmaf = models.FloatField(default=0.0, blank=True, null=True)
     # if this image is improved over the previous version. 1: True, -1:False
     improved = models.IntegerField(default=0, blank=True, null=True)
+    active = models.NullBooleanField(default=True, blank=True, null=True)
+
+    def delete(self):
+        self.active = False
+        self.save()
 
     def get_improved(self):
         return self.improved >= 0
@@ -75,6 +82,28 @@ class Image(models.Model):
         query_set = cls.objects.filter(project=project_name, platform=platform_name, version=version)
         resolutions = query_set.values("resolution")
         return set([r.get('resolution') for r in resolutions])
+
+
+    @classmethod
+    def get_grades_avg(cls, proj, ver, reso):
+        """
+        获取图片平均分信息
+        """
+        imgs = Image.objects.filter(project=proj, version=ver, resolution=reso)
+        rows = [Grade.get_average(img) for img in imgs]
+        df = DataFrame(rows, index=[r.pop('version') for r in rows])
+        df.loc['total'] = df.median()
+        return df
+
+    @classmethod
+    def get_grades_detail(cls, proj, ver, reso):
+        """
+        获取图片打分历史信息
+        """
+        imgs = Image.objects.filter(project=proj, version=ver, resolution=reso)
+        rows = [Grade.get_record(img) for img in imgs]
+        df = DataFrame(rows, index=[img.name for img in imgs])
+        return df
 
     @classmethod
     def export_xls(cls, proj, ver):
@@ -228,6 +257,13 @@ class Grade(models.Model):
         return stat
 
     @classmethod
+    def get_record(cls, img):
+        getter = itemgetter('dem1','dem2','dem3','dem4','dem5')
+        grades = Grade.objects.filter(img=img)
+        stat = [getter(grade.__dict__) for grade in grades]
+        return list(zip(*stat))
+
+    @classmethod
     def get_average(cls, img, category=False, version=False):
         getter = itemgetter('dem1','dem2','dem3','dem4','dem5')
         if category:
@@ -239,7 +275,7 @@ class Grade(models.Model):
             stat = [getter(grade.__dict__) for grade in grades]
             return cls._calc_avg(img.version, stat)
         grades = Grade.objects.filter(img=img)
-        stat = [getter(grade) for grade in grades]
+        stat = [getter(grade.__dict__) for grade in grades]
         return cls._calc_avg(img.name, stat)
 
     @staticmethod
@@ -249,9 +285,9 @@ class Grade(models.Model):
             return ret
         header = ('dem1','dem2','dem3','dem4','dem5')
         df = DataFrame(data, columns=header)
-        avg_dict = dict(zip(header, df.mean().round(2)))
+        avg_dict = dict(zip(header, df.median().round(2)))
         ret.update(avg_dict)
-        ret.update({'avg': df.mean().mean().round(2)})
+        ret.update({'avg': round(df.median().mean(), 2)})
         return ret
 
 

@@ -1,8 +1,9 @@
 import json
-from .models import Image, Grade
-from .tools import cal_ssim
 from django.shortcuts import render, HttpResponse
 import arrow
+
+from .models import Image, Grade
+from .tools import cal_ssim
 
 
 def insert(request):
@@ -33,7 +34,6 @@ def grade(request, pid):
         data.append(Grade.get_average(img))
         data.append(Grade.get_average(img, category=True))
         data.append(Grade.get_average(img, version=True))
-        print(data)
         return HttpResponse(json.dumps(data))
 
 

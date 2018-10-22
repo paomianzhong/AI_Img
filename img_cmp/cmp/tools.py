@@ -8,7 +8,6 @@ from contextlib import contextmanager
 @contextmanager
 def cal_ssim(url_i1, url_i2):
     tmp_path = Path(__file__).absolute().parent.parent/'tmp'
-#   for url in (url_i1, url_i2):
     img_name1 = url_i1.rpartition('/')[-1]
     img_name2 = url_i2.rpartition('/')[-1]
     contrast = str(tmp_path/img_name1)
