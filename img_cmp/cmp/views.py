@@ -48,7 +48,7 @@ def compare(request, project):
         if request.GET:
             reso = request.GET['category']
             v1, v2 = request.GET['img1_version'], request.GET['img2_version']
-            num = request.GET['number'].zfill(2)
+            num = request.GET['number'].zfill(4)
             img1 = Image.objects.get(project=project, version=v1, resolution=reso, name__startswith=num)
             img2 = Image.objects.get(project=project, version=v2, resolution=reso, name__startswith=num)
             selected2 = [v1, v2, reso, num]
