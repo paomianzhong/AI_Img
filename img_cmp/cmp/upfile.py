@@ -33,12 +33,12 @@ def uploadFile(localPath,project,platform,version):
 				ret = rr.uploadSingleFile()
 				print("Start uploading files: %s ,status:%d " % (filePath,ret))
 
-def uploadMarkFile(localPath,project,version):
+def uploadMarkFile(localPath,project,platform,version):
 	for dirs in os.walk(localPath):
 		for file in dirs[2]:
 			filePath = localPath + '/' + file
 			rr = upload.upload()
-			rr.objectKey = project + '/' + version + '/' + file
+			rr.objectKey = project + '/' + platform + '/' + version + '/' + file
 			print("KS3路径：" + rr.objectKey)
 			rr.filePath = filePath
 			rr.bucket = 'qa-vod'  # 上传bucket

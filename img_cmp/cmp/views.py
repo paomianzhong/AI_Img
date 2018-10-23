@@ -149,12 +149,12 @@ def up(request):
         if os.path.exists(path + '/' + '__MACOSX'):
             shutil.rmtree(path + '/' + '__MACOSX')
 
-        if project == 'Mark':
-            upfile.uploadMarkFile(localPath, project, version)
+        if project == 'AI-case' and project == 'Zhaidai_Project':
+            upfile.uploadFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
         else:
-            upfile.uploadFile(localPath, project, platform, version)
+            upfile.uploadMarkFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
         return HttpResponse("上传完成!")
