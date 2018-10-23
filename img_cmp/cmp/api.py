@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render, HttpResponse
 import arrow
 
-from .models import Image, Grade
+from .models import Image, Grade, Performance
 from .tools import cal_ssim
 
 
@@ -13,6 +13,15 @@ def insert(request):
     try:
         data = request.GET.dict()
         Image.objects.create(**data)
+        return HttpResponse(json.dumps({'result': 'ok'}))
+    except Exception as e:
+        return HttpResponse(json.dumps({'result': e}))
+
+
+def insert1(request):
+    try:
+        data = request.GET.dict()
+        Performance.objects.create(**data)
         return HttpResponse(json.dumps({'result': 'ok'}))
     except Exception as e:
         return HttpResponse(json.dumps({'result': e}))

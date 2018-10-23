@@ -51,3 +51,20 @@ def insertdb1(project, version, ks3_url):
                's3_url': ks3_url}
     requests.get('http://10.100.51.45:8000/api/insert', params=payload)
 
+
+def insertdb2(project, platform, version, resolution, phone, time_avg, time_max, cpu_avg, cpu_max, mem_avg, mem_max):
+    payload = {
+        'project': project,
+        'platform': platform,
+        'version': version,
+        'resolution': resolution,
+        'phone': phone,
+        'time_avg': time_avg,
+        'time_max': time_max,
+        'cpu_avg': cpu_avg,
+        'cpu_max': cpu_max,
+        'mem_avg': mem_avg,
+        'mem_max': mem_max
+    }
+    requests.get('http://10.100.51.45:8000/api/insert1', params=payload)
+

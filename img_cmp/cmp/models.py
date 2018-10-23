@@ -292,11 +292,11 @@ class Grade(models.Model):
 
 
 class Performance(models.Model):
-    project = models.CharField(max_length=64)
+    project = models.CharField(max_length=64, default='')
     platform = models.CharField(max_length=64, default='')
-    version = models.CharField(max_length=64)
-    resolution = models.CharField(max_length=64)
-    phone = models.CharField(max_length=64)
+    version = models.CharField(max_length=64, default='')
+    resolution = models.CharField(max_length=64, default='')
+    phone = models.CharField(max_length=64, default='')
     time_avg = models.FloatField(default=0)
     time_max = models.FloatField(default=0)
     cpu_avg = models.FloatField(default=0)

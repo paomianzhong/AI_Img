@@ -18,6 +18,7 @@ urlpatterns = [
     path('api/grade/<int:pid>/', api.grade, name='grade'),
     path('api/grade2/<int:pid>/', api.grade2, name='grade_detail'),
     path('api/insert', api.insert, name='insert'),
+    path('api/insert1', api.insert1, name='insert1'),
     path('api/export/', api.export, name='export'),
     path('api/ssim/', api.get_ssim, name='ssim'),
     path('api/version/', views.update_version, name='version'),
