@@ -8,7 +8,7 @@ from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 
-from .models import Image, Grade
+from .models import Image, Grade, Performance
 from .forms import GradeForm, GradeForm2, GradeForm3
 from .tools import cal_ssim
 
@@ -350,16 +350,76 @@ def chart1(request,project):
 
 def performance(request,project):
     context = {'project': project}
-    choices = Image.category(project)
+    choices = Performance.category(project)
     context.update(choices)
-    versions = Image.get_version(project)
-    context.update({"versions": versions})
-    selected = ['Platform', 'Version']
-
+    platforms = Performance.get_platform(project)
+    versions = Performance.get_version(project)
+    resolutions = Performance.get_all_resolutions()
+    resolutionArray = []
+    for item in resolutions:
+        resolutionArray.append(item)
+    phones = Performance.get_phone(project)
+    context.update({"platforms": platforms, "versions": versions, "resolutions": json.dumps(resolutionArray), "phones": phones})
+    selected = ['平台', '版本', '机型', '指标']
+    context.update({"selected": selected})
     if request.method == 'POST':
+        time_data = []
+        cpu_data = []
+        mem_data = []
         plat = request.POST.get('img_platform')
-        ver = request.POST.get('img_version')
-        selected = [plat, ver]
+        ver = request.POST.getlist('img_version')
+        phone = request.POST.getlist('phone')
+        selected = [plat, ver, phone]
+        context.update({"resolutions": json.dumps(resolutionArray)})
+        for i in range(0, len(ver)):
+            time_avg_list = []
+            time_max_list = []
+            cpu_avg_list = []
+            cpu_max_list = []
+            mem_avg_list = []
+            mem_max_list = []
+            for j in range(0, len(phone)):
+                performance = Performance.objects.filter(project=project, platform=plat, version=ver[i], phone=phone[j])
+                for p in performance:
+                    time_avg = p.time_avg
+                    time_avg_list.append(str(time_avg))
+                    time_max = p.time_max
+                    time_max_list.append(str(time_max))
+
+                    cpu_avg = p.cpu_avg
+                    cpu_avg_list.append(str(cpu_avg))
+                    cpu_max = p.time_max
+                    cpu_max_list.append(str(cpu_max))
+
+                    mem_avg = p.mem_avg
+                    mem_avg_list.append(str(mem_avg))
+                    mem_max = p.mem_max
+                    mem_max_list.append(str(mem_max))
+
+                dct = {"name": ver[i]+'_'+phone[j] + "_time_avg"}
+                dct.update({'data': [float(time_avg_list[0]), float(time_avg_list[1])]})
+                time_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_time_max"}
+                dct.update({'data': [float(time_max_list[0]), float(time_max_list[1])]})
+                time_data.append(dct)
+                context.update({'time_series': json.dumps(time_data)})
+
+                dct = {"name": ver[i] + '_' + phone[j] + "_cpu_avg"}
+                dct.update({'data': [float(cpu_avg_list[0]), float(cpu_avg_list[1])]})
+                cpu_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_cpu_max"}
+                dct.update({'data': [float(cpu_max_list[0]), float(cpu_max_list[1])]})
+                cpu_data.append(dct)
+                context.update({'cpu_series': json.dumps(cpu_data)})
+
+                dct = {"name": ver[i] + '_' + phone[j] + "_mem_avg"}
+                dct.update({'data': [float(mem_avg_list[0]), float(mem_avg_list[1])]})
+                mem_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_mem_max"}
+                dct.update({'data': [float(mem_max_list[0]), float(mem_max_list[1])]})
+                mem_data.append(dct)
+                context.update({'mem_series': json.dumps(mem_data)})
+
     context.update({"selected": selected})
     return render(request, "performance.html", context)
 

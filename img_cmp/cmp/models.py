@@ -295,6 +295,7 @@ class Performance(models.Model):
     project = models.CharField(max_length=64)
     platform = models.CharField(max_length=64, default='')
     version = models.CharField(max_length=64)
+    resolution = models.CharField(max_length=64)
     phone = models.CharField(max_length=64)
     time_avg = models.FloatField(default=0)
     time_max = models.FloatField(default=0)
@@ -302,5 +303,57 @@ class Performance(models.Model):
     cpu_max = models.FloatField(default=0)
     mem_avg = models.FloatField(default=0)
     mem_max = models.FloatField(default=0)
+
+    @classmethod
+    def category(cls, project_name):
+        """
+        获取图片的版本和分辨率种类
+        :return:
+        """
+        query_set = cls.objects.filter(project=project_name)
+        versions = query_set.values("version")
+        resolutions = query_set.values("resolution")
+        platforms = query_set.values("platform")
+        ret = {'versions': set([v.get('version') for v in versions]),
+               'resolutions': set([r.get('resolution') for r in resolutions]),
+               'platforms': set([p.get('platform') for p in platforms])
+               }
+        return ret
+
+    @classmethod
+    def get_project(cls):
+        projects = cls.objects.values("project")
+        return set([p.get('project') for p in projects])
+
+    @classmethod
+    def get_platform(cls, project_name):
+        query_set = cls.objects.filter(project=project_name)
+        platforms = query_set.values("platform")
+        return set([pl.get('platform') for pl in platforms])
+
+    @classmethod
+    def get_version(cls, project_name, platform_name=None):
+        if platform_name:
+            query_set = cls.objects.filter(project=project_name, platform=platform_name)
+        else:
+            query_set = cls.objects.filter(project=project_name)
+        versions = query_set.values("version")
+        return set([v.get('version') for v in versions])
+
+    @classmethod
+    def get_all_resolutions(cls):
+        query_set = cls.objects.all().values('resolution')
+        # resolutions = query_set.values("resolution")
+        return set([r.get('resolution') for r in query_set])
+
+    @classmethod
+    def get_phone(cls, project_name, platform_name=None):
+        if platform_name:
+            query_set = cls.objects.filter(project=project_name, platform=platform_name)
+        else:
+            query_set = cls.objects.filter(project=project_name)
+        phones = query_set.values("phone")
+        return set([ph.get('phone') for ph in phones])
+
 
 
