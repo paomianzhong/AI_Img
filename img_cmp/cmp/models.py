@@ -265,7 +265,7 @@ class Grade(models.Model):
 
     @classmethod
     def get_average(cls, img, category=False, version=False):
-        getter = itemgetter('dem1','dem2','dem3','dem4','dem5')
+        getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
         if category:
             grades = Grade.objects.filter(img__project=img.project, img__version=img.version, img__resolution=img.resolution)
             stat = [getter(grade.__dict__) for grade in grades]
@@ -283,7 +283,7 @@ class Grade(models.Model):
         ret = {'version': ver}
         if not data:
             return ret
-        header = ('dem1','dem2','dem3','dem4','dem5')
+        header = ('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
         df = DataFrame(data, columns=header)
         avg_dict = dict(zip(header, df.median().round(2)))
         ret.update(avg_dict)

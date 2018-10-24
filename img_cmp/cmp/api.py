@@ -67,9 +67,11 @@ def get_ssim(request):
         img1 = Image.objects.get(pk=data['img1'])
         img2 = Image.objects.get(pk=data['img2'])
         with cal_ssim(img1.s3_url, img2.s3_url) as v:
-            return HttpResponse(json.dumps({'ssim': v}))
+            ret = HttpResponse(json.dumps({'ssim': v}))
     except Exception as e:
-        return HttpResponse(json.dumps({'msg': e}))
+        ret = HttpResponse(json.dumps({'ssim': e}))
+    ret["Content-Type"] = "application/json;charset=utf-8"
+    return ret
 
 
 def evaluate(request, pid):
@@ -77,12 +79,14 @@ def evaluate(request, pid):
     评价图片是否优于上一个版本 1: 是, -1: 否
     """
     try:
-        data = request.POST['ifimproved']
+        data = request.GET.dict()['ifimproved']
         img = Image.objects.get(pk=pid)
-        img.add_improved(data)
-        return HttpResponse(json.dumps({'result': 'ok'}))
+        img.add_improved(int(data))
+        ret = HttpResponse(json.dumps({'result': 'ok'}))
     except Exception as e:
-        return HttpResponse(json.dumps({'result': e}))
+        ret = HttpResponse(json.dumps({'result': e}))
+    ret["Content-Type"] = "application/json;charset=utf-8"
+    return ret
 
 
 def export(request):

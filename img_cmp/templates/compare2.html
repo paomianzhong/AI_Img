@@ -147,6 +147,14 @@
 
 <!-- image -->
 {% if img2 %}
+<div style="position: relative;text-align: center;">
+    <button class="btn btn-primary" onclick="get_ssim()">SSIM</button>
+    <span style="margin-right: 50px;"><input id="input" type="text" /></span>
+    <span><b style="font-size: 18px;">是否优于上个版本：</b></span>
+    <button class="btn btn-primary" onclick="test('1')">是</button>
+    <button class="btn btn-primary" onclick="test('-1')">否</button>
+</div>
+<br>
 <div id="demo" data-type="image-comparison" src1="{{ img2.s3_url }}" src2="{{ img1.s3_url }}"></div>
 {% endif %}
 
@@ -164,7 +172,7 @@
         var value = se.options[index].value;
         var all_options = se.options;
         if (txt == 'next'){
-            if (value == '20'){
+            if (value == '20000'){
                 alert("已经是最后一张图了!");
             }else{
                 for (i=0; i< all_options.length; i++){
@@ -188,9 +196,45 @@
         }
         document.forms[1].target="rfFrame";
     }
+
+    function get_ssim(){
+        var p = document.getElementById("ssim");
+        var ul = "/api/ssim?img1="+{{ img1.id }}+"&img2="+{{ img2.id }};
+        $.ajax({
+            url: ul,
+            type: "get",
+            dataType: "json",
+            success: function(data){
+                var ssim = document.getElementById("input");
+                ssim.value = data.ssim;
+            },
+            error: function(data){
+                alert("error");
+            },
+        });
+    }
 </script>
 
 <script>
+    function test(txt){
+        alert("test");
+        if (txt == '1'){
+            var ul = "/api/evaluate/{{ img2.id }}?ifimproved=1";
+        }else{
+            var ul = "/api/evaluate/{{ img2.id }}?ifimproved=-1";
+        }
+        $.ajax({
+            url: ul,
+            dataType: "json",
+            type: "get",
+            success: function(data){
+                alert(data);
+            },
+            error: function(data){
+                alert("error");
+            },
+        });
+    }
     <!--$(document).ready(function(){-->
         <!--$("#info1").mouseenter(function(event){-->
 		    <!--var tooltipHtml = "<div id='tooltip'>Hello！</div>";-->

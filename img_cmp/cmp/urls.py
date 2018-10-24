@@ -22,6 +22,7 @@ urlpatterns = [
     path('api/insert1', api.insert1, name='insert1'),
     path('api/export/', api.export, name='export'),
     path('api/ssim/', api.get_ssim, name='ssim'),
+    path('api/evaluate/<int:pid>/', api.evaluate, name='evaluate'),
     path('api/version/', views.update_version, name='version'),
     path('api/resolution/', views.update_resolution, name='resolution'),
 ]

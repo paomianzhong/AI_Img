@@ -12,16 +12,17 @@ def cal_ssim(url_i1, url_i2):
     img_name2 = url_i2.rpartition('/')[-1]
     contrast = str(tmp_path/img_name1)
     data = requests.get(url_i1)
-    with open(contrast,'wb') as f:
+    with open(contrast, 'wb') as f:
         f.write(data.content)
     target = str(tmp_path/img_name2)
     data = requests.get(url_i2)
-    with open(target,'wb') as f:
+    with open(target, 'wb') as f:
         f.write(data.content)
     ret = ssim.compute_ssim(contrast, target)
     yield ret
     for p in tmp_path.glob('*'):
         os.remove(str(p))
+
 
 if __name__ == '__main__':
     url1 = 'https://ks3-cn-beijing.ksyun.com/qa-vod/Mark/miaopai_cover_image_jpg/0072_142_0_miaopai_jpg_199.jpg'
