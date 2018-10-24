@@ -92,15 +92,25 @@ margin-left: -150px;
   </div>
 </nav>
 <body>
+<!--<center>-->
 <div class="divForm">
-    <p><span style="color:red;">先上传视频到KS3，直接在此页面填写ks3地址</span></p>
-<form action="up1"  method="post" enctype="multipart/form-data" >
+<form action="up2"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     项目名称:
-    <input type="radio" name="project" value="Zhaidai_Project">窄带高清
-    <input type="radio" name="project" value="Unpublished">未发布版本<br>
+    <input type="radio" name="project" value="AI-case">KIE
+    <br>
+    平台：<input type="radio" name="platform" value="Android">Android
+    <input type="radio" name="platform" value="IOS">IOS
+    <input type="radio" name="platform" value="Server">Server<br>
     版本号：<input type="text" name="version"><br>
-    KS3地址：<input type="text" name="ks3_url"><br>
+    分辨率：<input type="text" name="resolution"><br>
+    机型：<input type="text" name="phone"><br>
+    平均处理时间：<input type="text" name="time_avg"><br>
+    最大处理时间：<input type="text" name="time_max"><br>
+    平均CPU：<input type="text" name="cpu_avg"><br>
+    最大CPU：<input type="text" name="cpu_max"><br>
+    平均MEM：<input type="text" name="mem_avg"><br>
+    最大MEM：<input type="text" name="mem_max"><br>
     <input type="submit" value="提交">
 
 </form>

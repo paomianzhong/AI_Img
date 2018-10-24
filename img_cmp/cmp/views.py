@@ -118,8 +118,6 @@ def compare2(request, project):
         return render(request, 'compare4.html', context)
 
 
-
-
 def up(request):
     if request.POST:
         isrename = request.POST.get('rename','')
@@ -173,6 +171,24 @@ def up1(request):
     else:
         return render(request, "up1.html")
 
+
+def up2(request):
+    if request.POST:
+        project = request.POST.get('project', '')
+        platform = request.POST.get('platform', '')
+        version = request.POST.get('version', '')
+        resolution = request.POST.get('resolution', '')
+        phone = request.POST.get('phone', '')
+        time_avg = request.POST.get('time_avg', '')
+        time_max = request.POST.get('time_max', '')
+        cpu_avg = request.POST.get('cpu_avg', '')
+        cpu_max = request.POST.get('cpu_max', '')
+        mem_avg = request.POST.get('mem_avg', '')
+        mem_max = request.POST.get('mem_max', '')
+        insertdb.insertdb2(project, platform, version, resolution, phone, time_avg, time_max, cpu_avg, cpu_max, mem_avg, mem_max)
+        return HttpResponse("上传完成!")
+    else:
+        return render(request, "up2.html")
 
 
 @csrf_exempt

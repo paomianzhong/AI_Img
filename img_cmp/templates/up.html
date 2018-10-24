@@ -32,6 +32,20 @@ margin: 20px;
     text-align: inherit;
 }
 </style>
+    <style type="text/css">
+.divForm{
+position: absolute;/*绝对定位*/
+width: 400px;
+height: 200px;
+
+<!--border: 1px solid red;-->
+text-align: center;/*(让div中的内容居中)*/
+top: 50%;
+left: 50%;
+margin-top: -200px;
+margin-left: -150px;
+}
+</style>
     <meta charset="UTF-8">
     <!--引入CSS-->
 <link rel="stylesheet" type="text/css" href="https://cdn.staticfile.org/webuploader/0.1.1/webuploader.css">
@@ -78,19 +92,20 @@ margin: 20px;
   </div>
 </nav>
 <body>
-<p>批量上传图片并插入信息到数据库，点击提交后需耐心等待直至跳转上传成功</p>
+<div class="divForm">
+    <p><span style="color:red;">批量上传图片并插入信息到数据库，点击提交后需耐心等待直至跳转上传成功</span></p>
 <form action="up"  method="post" enctype="multipart/form-data" >
     {% csrf_token %}
     是否重命名(默认需要重命名)：
     <input type="radio" name="rename" value="1" checked="checked">是
     <input type="radio" name="rename" value="0">否<br>
     项目名称:
-    <input type="radio" name="project" value="AI-Case">图片对比
-    <input type="radio" name="project" value="Zhaidai_Project">图片打分
-    <input type="radio" name="project" value="Mark">Mark(不分类训练集)
-    <input type="radio" name="project" value="Set">Set(分类训练集)
-    <input type="radio" name="project" value="Unpublished">未发布版本
-    <input type="text" name="project"><br>
+    <input type="radio" name="project" value="AI-Case">图片对比(带分辨率)<br>
+    <input type="radio" name="project" value="Zhaidai_Project">图片打分(带类别)
+    <input type="radio" name="project" value="KIE">KIE(不分类)
+    <input type="radio" name="project" value="Mark">Mark(不分类测试集)<br>
+    <input type="radio" name="project" value="Set">Set(分类测试集)
+    <input type="radio" name="project" value="Unpublished">未发布版本<br>
     平台(选填)：<input type="radio" name="platform" value="Android">Android
     <input type="radio" name="platform" value="IOS">IOS
     <input type="radio" name="platform" value="Server">Server
@@ -99,6 +114,6 @@ margin: 20px;
     <input type="submit" value="提交">
 
 </form>
-
+</div>
 </body>
 </html>
