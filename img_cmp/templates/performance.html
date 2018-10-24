@@ -1,4 +1,5 @@
 {# Load the tag library #}
+{% extends 'base.html' %}
 {% load bootstrap4 %}
 
 {# Load CSS and JavaScript #}
@@ -63,48 +64,10 @@ margin: 20px;
     </style>
 </head>
 
-<nav class="navbar  navbar-expand-lg">
-    <div class="collapse1 navbar-collapse">
-        <li>
-            <a href="http://10.100.51.45:8020/">
-                <img src="https://ks3-cn-beijing.ksyun.com/qa-vod/xiexiaoli-case/%E9%87%91%E5%B1%B1%E4%BA%911logo.jpeg"
-                     height=30 width=40/>
-            </a>
-        </li>
-        <li class="ac-gn-item ac-gn-item-menu ac-gn-support">
-            <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/AI-case/"
-               data-analytics-title="support">
-                <span class="ac-gn-link-text">KIE</span>
-            </a>
-        </li>
-        <li>
-            <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/cmp/Zhaidai_Project/"
-               data-analytics-title="support">
-                <span class="ac-gn-link-text">画质增强</span>
-            </a>
-        </li>
-        <li>
-            <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/new/Mark/"
-               data-analytics-title="support">
-                <span class="ac-gn-link-text">训练集</span>
-            </a>
-        </li>
-        <li>
-            <a class="ac-gn-link ac-gn-link-support" href="http://120.92.218.10:8223/diff2#"
-               data-analytics-title="support">
-                <span class="ac-gn-link-text">窄带视频</span>
-            </a>
-        </li>
-        <li>
-            <a class="ac-gn-link ac-gn-link-support" href="http://10.100.51.45:8020/files/upload2"
-               data-analytics-title="support">
-                <span class="ac-gn-link-text">上传</span>
-            </a>
-        </li>
-    </div>
-</nav>
+
+{% block panel %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="collapse navbar-collapse">
+    <div class="collapse navbar-collapse" >
         <form class="form-inline" method="post" onsubmit="return checkform()">
             {% csrf_token %}
             <select id="platform" class="custom-select my-1 mr-sm-2 " name="img_platform">
@@ -137,6 +100,8 @@ margin: 20px;
 
     <iframe id="rfFrame" name="rfFrame" src="about:blank" style="display:none;"></iframe>
 </nav>
+{% endblock %}
+{% block content %}
 <div id="container_time" style="width: 800px; height: 400px; margin: 0 auto"></div>
 <div id="container_cpu" style="width: 800px; height: 400px; margin: 0 auto"></div>
 <div id="container_mem" style="width: 800px; height: 400px; margin: 0 auto"></div>
@@ -298,5 +263,6 @@ $(function () {
 });
 
 </script>
+{% endblock %}
 </body>
 </html>
