@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 
 from .models import Image, Grade, Performance
 from .forms import GradeForm, GradeForm2, GradeForm3
-from .tools import cal_ssim
+# from .tools import cal_ssim
 
 from django.views.decorators.csrf import csrf_exempt
 from . import upfile
