@@ -147,15 +147,10 @@
 
 <!-- image -->
 {% if img2 %}
-<div style="position: relative;text-align: center;">
-    <button class="btn btn-primary" onclick="get_ssim()">SSIM</button>
-    <span style="margin-right: 50px;"><input id="input" type="text" /></span>
-    <span><b style="font-size: 18px;">是否优于上个版本：</b></span>
-    <button class="btn btn-primary" onclick="test('1')">是</button>
-    <button class="btn btn-primary" onclick="test('-1')">否</button>
+<span id="demo" data-type="image-comparison" src1="{{ img2.s3_url }}" src2="{{ img1.s3_url }}"></span>
+<div style="float: right;margin-right: 70px;">
+    <span id="ssim" style="font-size: 20px;color: red;"></span>
 </div>
-<br>
-<div id="demo" data-type="image-comparison" src1="{{ img2.s3_url }}" src2="{{ img1.s3_url }}"></div>
 {% endif %}
 
 <script>
@@ -196,23 +191,22 @@
         }
         document.forms[1].target="rfFrame";
     }
+</script>
 
-    function get_ssim(){
-        var p = document.getElementById("ssim");
-        var ul = "/api/ssim?img1="+{{ img1.id }}+"&img2="+{{ img2.id }};
-        $.ajax({
-            url: ul,
-            type: "get",
-            dataType: "json",
-            success: function(data){
-                var ssim = document.getElementById("input");
-                ssim.value = data.ssim;
-            },
-            error: function(data){
-                alert("error");
-            },
-        });
-    }
+<script>
+    var p = document.getElementById("ssim");
+    var ul = "/api/ssim?img1="+{{ img1.id }}+"&img2="+{{ img2.id }};
+    $.ajax({
+        url: ul,
+        type: "get",
+        dataType: "json",
+        success: function(data){
+            p.innerHTML = "SSIM值: "+data.ssim;
+        },
+        error: function(data){
+            alert("error");
+        },
+    });
 </script>
 
 <script>
@@ -235,18 +229,6 @@
             },
         });
     }
-    <!--$(document).ready(function(){-->
-        <!--$("#info1").mouseenter(function(event){-->
-		    <!--var tooltipHtml = "<div id='tooltip'>Hello！</div>";-->
-		    <!--$(this).append(tooltipHtml);-->
-		    <!--$("#tooltip").css({-->
-			    <!--"top": (event.pageY) + "px",-->
-	            <!--"left": ($(this).width()) + "px"-->
-	        <!--}).show();-->
-	    <!--}).mouseleave(function(){-->
-		    <!--$("#tooltip").remove();-->
-	    <!--})-->
-	<!--})-->
 </script>
 {% endblock %}
 {# Read the documentation for more information #}

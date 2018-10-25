@@ -15,6 +15,7 @@ urlpatterns = [
     path('fileMerge/', views.fileMerge, name='上传成功合并'),
     path('cmp/<str:project>/', views.compare, name='cmp'),
     path('new/<str:project>/', views.compare2, name='compare2'),
+    path('version/<str:project>/', views.compare_version, name='compare_version'),
 
     path('api/grade/<int:pid>/', api.grade, name='grade'),
     path('api/grade2/<int:pid>/', api.grade2, name='grade_detail'),
@@ -24,5 +25,6 @@ urlpatterns = [
     path('api/ssim/', api.get_ssim, name='ssim'),
     path('api/evaluate/<int:pid>/', api.evaluate, name='evaluate'),
     path('api/version/', views.update_version, name='version'),
+    path('api/version2/<int:pid>/', api.version_grade, name='version_grade'),
     path('api/resolution/', views.update_resolution, name='resolution'),
 ]

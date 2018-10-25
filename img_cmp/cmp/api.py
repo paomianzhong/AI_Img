@@ -58,6 +58,32 @@ def grade2(request, pid):
     return HttpResponse(json.dumps(data))
 
 
+def version_grade(request, pid):
+    """
+    获取版本对比信息
+    :param request:
+    :param pid:
+    :return:
+    """
+    data = request.GET.dict()
+    number = data["number"]
+    project = data["project"]
+    img = Image.objects.get(pk=pid)
+    imgs = Image.objects.filter(project=project, platform=img.platform, version=img.version, resolution=img.resolution)
+    count = list(filter(lambda i: i.improved > 0, imgs))
+    dct = {}
+    if img.improved > 0:
+        compare = "优于"
+    elif img.improved < 0:
+        compare = "差于"
+    else:
+        compare = "--"
+    dct.update({"name": img.name, "compare": compare, "excellent": str(len(count))+'/'+number})
+    ret = []
+    ret.append(dct)
+    return HttpResponse(json.dumps(ret))
+
+
 def get_ssim(request):
     """
     获取两张图片的ssim值

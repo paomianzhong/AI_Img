@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 import json
 import arrow
-import zipfile,os,time,shutil
+import zipfile, os, time, shutil
 from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
@@ -37,10 +37,12 @@ def compare(request, project):
             p1, v1 = request.GET['img1_platform'], request.GET['img1_version']
             p2, v2 = request.GET['img2_platform'], request.GET['img2_version']
             num = request.GET['number'].zfill(2)
+            imgs = Image.objects.filter(project=project, version=v1, platform=p1, resolution=reso)
+            numbers = list(range(1, len(imgs)+1))
             img1 = Image.objects.get(project=project, platform=p1, version=v1, resolution=reso, name__startswith=num)
             img2 = Image.objects.get(project=project, platform=p2, version=v2, resolution=reso, name__startswith=num)
             selected1 = [p1, v1, p2, v2, reso, num]
-            context.update({'img1': img1, 'img2': img2})
+            context.update({'img1': img1, 'img2': img2, 'numbers': numbers})
 
         context['selected'] = selected1
         return render(request, 'compare.html', context)
@@ -48,16 +50,19 @@ def compare(request, project):
         if request.GET:
             reso = request.GET['category']
             v1, v2 = request.GET['img1_version'], request.GET['img2_version']
-            num = request.GET['number'].zfill(4)
+            num = request.GET['number'].zfill(2)
+            imgs = Image.objects.filter(project=project, version=v1, resolution=reso)
+            numbers = list(range(1, len(imgs)+1))
             img1 = Image.objects.get(project=project, version=v1, resolution=reso, name__startswith=num)
             img2 = Image.objects.get(project=project, version=v2, resolution=reso, name__startswith=num)
             selected2 = [v1, v2, reso, num]
-            context.update({'img1': img1, 'img2': img2})
+            context.update({'img1': img1, 'img2': img2, 'numbers': numbers})
 
         if request.POST:
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context['selected'] = selected2
@@ -65,7 +70,7 @@ def compare(request, project):
 
 
 def compare2(request, project):
-    if project=='Mark':
+    if project == 'Mark':
         form = GradeForm2
         context = {'form': form}
         versions = Image.get_version(project)
@@ -75,7 +80,7 @@ def compare2(request, project):
         if request.GET:
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v)
-            numbers = list(range(1, len(imgs) + 1))
+            numbers = list(range(1, len(imgs)+1))
             num = request.GET['number'].zfill(4)
             img = Image.objects.get(project=project, version=v, name__startswith=num)
             context.update({'img': img})
@@ -85,6 +90,7 @@ def compare2(request, project):
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context.update({"numbers": numbers, "selected": selected})
@@ -102,7 +108,7 @@ def compare2(request, project):
             reso = request.GET['category']
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v, resolution=reso)
-            numbers = list(range(1, len(imgs) + 1))
+            numbers = list(range(1, len(imgs)+1))
             num = request.GET['number'].zfill(2)
             img = Image.objects.get(project=project, version=v, resolution=reso, name__startswith=num)
             context.update({'img': img})
@@ -112,10 +118,31 @@ def compare2(request, project):
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context.update({"numbers": numbers, "selected": selected})
         return render(request, 'compare4.html', context)
+
+
+def compare_version(request, project):
+    choices = Image.category(project)
+    context = {}
+    context.update(choices)
+    numbers = list(range(1, 21))
+    selected = ['选择平台', '选择上一版本', '选择当前版本', '类别', 'Number']
+    if request.GET:
+        p, r = request.GET["platform"], request.GET["category"]
+        v1, v2 = request.GET["img1_version"], request.GET["img2_version"]
+        num = request.GET["number"].zfill(2)
+        imgs = Image.objects.filter(project=project, platform=p, version=v1, resolution=r)
+        numbers = list(range(1, len(imgs)+1))
+        img1 = Image.objects.get(project=project, platform=p, version=v1, resolution=r, name__startswith=num)
+        img2 = Image.objects.get(project=project, platform=p, version=v2, resolution=r, name__startswith=num)
+        context.update({"img1": img1, "img2": img2, "project": project})
+        selected = [p, v1, v2, r, num]
+    context.update({"numbers": numbers, "selected": selected})
+    return render(request, 'compare_version.html', context)
 
 
 def up(request):
@@ -256,6 +283,7 @@ def update_resolution(request):
     ret = HttpResponse(json.dumps(data))
     ret['Content-Type'] = 'application/json;charset=utf-8'
     return ret
+
 
 @csrf_exempt
 def chart(request,project):
@@ -438,4 +466,3 @@ def performance(request,project):
 
     context.update({"selected": selected})
     return render(request, "performance.html", context)
-
