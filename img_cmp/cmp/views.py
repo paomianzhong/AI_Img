@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 
 from .models import Image, Grade, Performance
 from .forms import GradeForm, GradeForm2, GradeForm3
-# from .tools import cal_ssim
+from .tools import cal_ssim
 
 from django.views.decorators.csrf import csrf_exempt
 from . import upfile
@@ -50,7 +50,7 @@ def compare(request, project):
         if request.GET:
             reso = request.GET['category']
             v1, v2 = request.GET['img1_version'], request.GET['img2_version']
-            num = request.GET['number'].zfill(2)
+            num = request.GET['number'].zfill(4)
             imgs = Image.objects.filter(project=project, version=v1, resolution=reso)
             numbers = list(range(1, len(imgs)+1))
             img1 = Image.objects.get(project=project, version=v1, resolution=reso, name__startswith=num)
@@ -134,11 +134,11 @@ def compare_version(request, project):
     if request.GET:
         p, r = request.GET["platform"], request.GET["category"]
         v1, v2 = request.GET["img1_version"], request.GET["img2_version"]
-        num = request.GET["number"].zfill(2)
-        imgs = Image.objects.filter(project=project, platform=p, version=v1, resolution=r)
+        num = request.GET["number"].zfill(4)
+        imgs = Image.objects.filter(project=project, version=v1, resolution=r)
         numbers = list(range(1, len(imgs)+1))
-        img1 = Image.objects.get(project=project, platform=p, version=v1, resolution=r, name__startswith=num)
-        img2 = Image.objects.get(project=project, platform=p, version=v2, resolution=r, name__startswith=num)
+        img1 = Image.objects.get(project=project, version=v1, resolution=r, name__startswith=num)
+        img2 = Image.objects.get(project=project, version=v2, resolution=r, name__startswith=num)
         context.update({"img1": img1, "img2": img2, "project": project})
         selected = [p, v1, v2, r, num]
     context.update({"numbers": numbers, "selected": selected})
