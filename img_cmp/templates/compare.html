@@ -8,6 +8,7 @@
 {{ script|safe }}
 {% endblock %}
 
+
 {% block panel %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="collapse navbar-collapse">
@@ -79,7 +80,7 @@
         var next_button = document.getElementById('button-next');
         var last_button = document.getElementById('button-last');
         if (txt == 'next'){
-            if (value == '20'){
+            if (value == '20000'){
                 alert("已经是最后一张图了!");
             }else{
                 for (i=0; i< all_options.length; i++){

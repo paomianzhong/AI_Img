@@ -3,12 +3,12 @@ from django.shortcuts import render
 # Create your views here.
 import json
 import arrow
-import zipfile,os,time,shutil
+import zipfile, os, time, shutil
 from django.shortcuts import render, HttpResponse
 from django.http import StreamingHttpResponse
 from django.shortcuts import render_to_response
 
-from .models import Image, Grade
+from .models import Image, Grade, Performance
 from .forms import GradeForm, GradeForm2, GradeForm3
 from .tools import cal_ssim
 
@@ -37,10 +37,12 @@ def compare(request, project):
             p1, v1 = request.GET['img1_platform'], request.GET['img1_version']
             p2, v2 = request.GET['img2_platform'], request.GET['img2_version']
             num = request.GET['number'].zfill(2)
+            imgs = Image.objects.filter(project=project, version=v1, platform=p1, resolution=reso)
+            numbers = list(range(1, len(imgs)+1))
             img1 = Image.objects.get(project=project, platform=p1, version=v1, resolution=reso, name__startswith=num)
             img2 = Image.objects.get(project=project, platform=p2, version=v2, resolution=reso, name__startswith=num)
             selected1 = [p1, v1, p2, v2, reso, num]
-            context.update({'img1': img1, 'img2': img2})
+            context.update({'img1': img1, 'img2': img2, 'numbers': numbers})
 
         context['selected'] = selected1
         return render(request, 'compare.html', context)
@@ -48,16 +50,19 @@ def compare(request, project):
         if request.GET:
             reso = request.GET['category']
             v1, v2 = request.GET['img1_version'], request.GET['img2_version']
-            num = request.GET['number'].zfill(2)
+            num = request.GET['number'].zfill(4)
+            imgs = Image.objects.filter(project=project, version=v1, resolution=reso)
+            numbers = list(range(1, len(imgs)+1))
             img1 = Image.objects.get(project=project, version=v1, resolution=reso, name__startswith=num)
             img2 = Image.objects.get(project=project, version=v2, resolution=reso, name__startswith=num)
             selected2 = [v1, v2, reso, num]
-            context.update({'img1': img1, 'img2': img2})
+            context.update({'img1': img1, 'img2': img2, 'numbers': numbers})
 
         if request.POST:
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context['selected'] = selected2
@@ -65,7 +70,7 @@ def compare(request, project):
 
 
 def compare2(request, project):
-    if project=='Mark':
+    if project == 'Mark':
         form = GradeForm2
         context = {'form': form}
         versions = Image.get_version(project)
@@ -75,7 +80,7 @@ def compare2(request, project):
         if request.GET:
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v)
-            numbers = list(range(1, len(imgs) + 1))
+            numbers = list(range(1, len(imgs)+1))
             num = request.GET['number'].zfill(4)
             img = Image.objects.get(project=project, version=v, name__startswith=num)
             context.update({'img': img})
@@ -85,6 +90,7 @@ def compare2(request, project):
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context.update({"numbers": numbers, "selected": selected})
@@ -102,7 +108,7 @@ def compare2(request, project):
             reso = request.GET['category']
             v = request.GET['img_version']
             imgs = Image.objects.filter(project=project, version=v, resolution=reso)
-            numbers = list(range(1, len(imgs) + 1))
+            numbers = list(range(1, len(imgs)+1))
             num = request.GET['number'].zfill(2)
             img = Image.objects.get(project=project, version=v, resolution=reso, name__startswith=num)
             context.update({'img': img})
@@ -112,12 +118,31 @@ def compare2(request, project):
             data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
             data['img'] = Image.objects.get(pk=request.POST['img_id'])
             data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
             Grade.objects.create(**data)
 
         context.update({"numbers": numbers, "selected": selected})
         return render(request, 'compare4.html', context)
 
 
+def compare_version(request, project):
+    choices = Image.category(project)
+    context = {}
+    context.update(choices)
+    numbers = list(range(1, 21))
+    selected = ['选择平台', '选择上一版本', '选择当前版本', '类别', 'Number']
+    if request.GET:
+        p, r = request.GET["platform"], request.GET["category"]
+        v1, v2 = request.GET["img1_version"], request.GET["img2_version"]
+        num = request.GET["number"].zfill(4)
+        imgs = Image.objects.filter(project=project, version=v1, resolution=r)
+        numbers = list(range(1, len(imgs)+1))
+        img1 = Image.objects.get(project=project, version=v1, resolution=r, name__startswith=num)
+        img2 = Image.objects.get(project=project, version=v2, resolution=r, name__startswith=num)
+        context.update({"img1": img1, "img2": img2, "project": project})
+        selected = [p, v1, v2, r, num]
+    context.update({"numbers": numbers, "selected": selected})
+    return render(request, 'compare_version.html', context)
 
 
 def up(request):
@@ -149,12 +174,12 @@ def up(request):
         if os.path.exists(path + '/' + '__MACOSX'):
             shutil.rmtree(path + '/' + '__MACOSX')
 
-        if project == 'Mark':
-            upfile.uploadMarkFile(localPath, project, version)
+        if project == 'AI-case' and project == 'Zhaidai_Project':
+            upfile.uploadFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
         else:
-            upfile.uploadFile(localPath, project, platform, version)
+            upfile.uploadMarkFile(localPath, project, platform, version)
             insertdb.insertdb(localPath, project, platform, version)
             shutil.rmtree(path)
         return HttpResponse("上传完成!")
@@ -173,6 +198,24 @@ def up1(request):
     else:
         return render(request, "up1.html")
 
+
+def up2(request):
+    if request.POST:
+        project = request.POST.get('project', '')
+        platform = request.POST.get('platform', '')
+        version = request.POST.get('version', '')
+        resolution = request.POST.get('resolution', '')
+        phone = request.POST.get('phone', '')
+        time_avg = request.POST.get('time_avg', '')
+        time_max = request.POST.get('time_max', '')
+        cpu_avg = request.POST.get('cpu_avg', '')
+        cpu_max = request.POST.get('cpu_max', '')
+        mem_avg = request.POST.get('mem_avg', '')
+        mem_max = request.POST.get('mem_max', '')
+        insertdb.insertdb2(project, platform, version, resolution, phone, time_avg, time_max, cpu_avg, cpu_max, mem_avg, mem_max)
+        return HttpResponse("上传完成!")
+    else:
+        return render(request, "up2.html")
 
 
 @csrf_exempt
@@ -240,6 +283,7 @@ def update_resolution(request):
     ret = HttpResponse(json.dumps(data))
     ret['Content-Type'] = 'application/json;charset=utf-8'
     return ret
+
 
 @csrf_exempt
 def chart(request,project):
@@ -350,16 +394,75 @@ def chart1(request,project):
 
 def performance(request,project):
     context = {'project': project}
-    choices = Image.category(project)
+    choices = Performance.category(project)
     context.update(choices)
-    versions = Image.get_version(project)
-    context.update({"versions": versions})
-    selected = ['Platform', 'Version']
-
+    platforms = Performance.get_platform(project)
+    versions = Performance.get_version(project)
+    resolutions = Performance.get_all_resolutions()
+    resolutionArray = []
+    for item in resolutions:
+        resolutionArray.append(item)
+    phones = Performance.get_phone(project)
+    context.update({"platforms": platforms, "versions": versions, "resolutions": json.dumps(resolutionArray), "phones": phones})
+    selected = ['平台', '版本', '机型', '指标']
+    context.update({"selected": selected})
     if request.method == 'POST':
+        time_data = []
+        cpu_data = []
+        mem_data = []
         plat = request.POST.get('img_platform')
-        ver = request.POST.get('img_version')
-        selected = [plat, ver]
+        ver = request.POST.getlist('img_version')
+        phone = request.POST.getlist('phone')
+        selected = [plat, ver, phone]
+        context.update({"resolutions": json.dumps(resolutionArray)})
+        for i in range(0, len(ver)):
+            time_avg_list = []
+            time_max_list = []
+            cpu_avg_list = []
+            cpu_max_list = []
+            mem_avg_list = []
+            mem_max_list = []
+            for j in range(0, len(phone)):
+                performance = Performance.objects.filter(project=project, platform=plat, version=ver[i], phone=phone[j])
+                for p in performance:
+                    time_avg = p.time_avg
+                    time_avg_list.append(str(time_avg))
+                    time_max = p.time_max
+                    time_max_list.append(str(time_max))
+
+                    cpu_avg = p.cpu_avg
+                    cpu_avg_list.append(str(cpu_avg))
+                    cpu_max = p.time_max
+                    cpu_max_list.append(str(cpu_max))
+
+                    mem_avg = p.mem_avg
+                    mem_avg_list.append(str(mem_avg))
+                    mem_max = p.mem_max
+                    mem_max_list.append(str(mem_max))
+
+                dct = {"name": ver[i]+'_'+phone[j] + "_time_avg"}
+                dct.update({'data': [float(time_avg_list[0]), float(time_avg_list[1])]})
+                time_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_time_max"}
+                dct.update({'data': [float(time_max_list[0]), float(time_max_list[1])]})
+                time_data.append(dct)
+                context.update({'time_series': json.dumps(time_data)})
+
+                dct = {"name": ver[i] + '_' + phone[j] + "_cpu_avg"}
+                dct.update({'data': [float(cpu_avg_list[0]), float(cpu_avg_list[1])]})
+                cpu_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_cpu_max"}
+                dct.update({'data': [float(cpu_max_list[0]), float(cpu_max_list[1])]})
+                cpu_data.append(dct)
+                context.update({'cpu_series': json.dumps(cpu_data)})
+
+                dct = {"name": ver[i] + '_' + phone[j] + "_mem_avg"}
+                dct.update({'data': [float(mem_avg_list[0]), float(mem_avg_list[1])]})
+                mem_data.append(dct)
+                dct = {"name": ver[i] + '_' + phone[j] + "_mem_max"}
+                dct.update({'data': [float(mem_max_list[0]), float(mem_max_list[1])]})
+                mem_data.append(dct)
+                context.update({'mem_series': json.dumps(mem_data)})
+
     context.update({"selected": selected})
     return render(request, "performance.html", context)
-
