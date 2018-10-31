@@ -134,6 +134,10 @@ class Image(models.Model):
                 stats.title = resolution
                 getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
                 dem_list = ['对焦', '清晰', '曝光', '颜值', '纹理']
+            elif proj == 'AI-case':
+                stats.title = resolution
+                getter = itemgetter('dem1', 'dem2', 'dem3', 'dem4', 'dem5')
+                dem_list = ['振铃效应', '块效应', '噪声', '模糊', '失真']
             else:
                 stats.title = resolution
                 getter = itemgetter('dem1')
