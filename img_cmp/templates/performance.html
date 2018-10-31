@@ -86,14 +86,13 @@ margin: 20px;
             </label><br>
             {% endfor %}
             <label class="form-check-label">机型：</label>
+            {% for ph in phones %}
             <label class="form-check-label">
                 <div style="float:left;padding:0 5px;">
-                    <input value="iphone8_10.4" type="checkbox" name="phone"/>iphone8_10.4
+                    <input value="{{ ph }}" type="checkbox" name="phone"/>{{ ph }}
                 </div>
-                <div style="float:left;padding:0 5px;">
-                    <input value="iphone7_10.3" type="checkbox" name="phone"/>iphone7_10.3
-                </div>
-            </label>
+            </label><br>
+            {% endfor %}
             <button id="new-submit" type="submit" class="btn btn-primary my-1" >Submit</button>
         </form>
     </div>
