@@ -392,6 +392,11 @@ def chart1(request,project):
         return render(request, "chart1.html", context)
 
 
+def resolutionSortKey(resolution):
+    resolution_list = resolution.split('_')
+    return int(resolution_list[0])
+
+
 def performance(request,project):
     context = {'project': project}
     choices = Performance.category(project)
@@ -402,6 +407,7 @@ def performance(request,project):
     resolutionArray = []
     for item in resolutions:
         resolutionArray.append(item)
+    resolutionArray.sort(key=resolutionSortKey)
     reso_lenth = len(resolutionArray)
     print(reso_lenth)
     phones = Performance.get_phone(project)
