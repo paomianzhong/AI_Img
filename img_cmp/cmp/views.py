@@ -402,9 +402,12 @@ def performance(request,project):
     resolutionArray = []
     for item in resolutions:
         resolutionArray.append(item)
+    reso_lenth = len(resolutionArray)
+    print(reso_lenth)
     phones = Performance.get_phone(project)
+
     context.update({"platforms": platforms, "versions": versions, "resolutions": json.dumps(resolutionArray), "phones": phones})
-    selected = ['平台', '版本', '机型', '指标']
+    selected = ['平台', '版本', '机型']
     context.update({"selected": selected})
     if request.method == 'POST':
         time_data = []
@@ -425,42 +428,50 @@ def performance(request,project):
             for j in range(0, len(phone)):
                 performance = Performance.objects.filter(project=project, platform=plat, version=ver[i], phone=phone[j])
                 for p in performance:
-                    time_avg = p.time_avg
-                    time_avg_list.append(str(time_avg))
-                    time_max = p.time_max
-                    time_max_list.append(str(time_max))
-
-                    cpu_avg = p.cpu_avg
-                    cpu_avg_list.append(str(cpu_avg))
-                    cpu_max = p.time_max
-                    cpu_max_list.append(str(cpu_max))
-
-                    mem_avg = p.mem_avg
-                    mem_avg_list.append(str(mem_avg))
-                    mem_max = p.mem_max
-                    mem_max_list.append(str(mem_max))
-
+                    time_avg_list.append(p.time_avg)
+                    time_max_list.append(p.time_max)
+                    cpu_avg_list.append(p.cpu_avg)
+                    cpu_max_list.append(p.time_max)
+                    mem_avg_list.append(p.mem_avg)
+                    mem_max_list.append(p.mem_max)
+                list1 = []
+                list2 = []
+                for k in range(0, reso_lenth):
+                    list1.append(time_avg_list[k])
+                    list2.append(time_max_list[k])
                 dct = {"name": ver[i]+'_'+phone[j] + "_time_avg"}
-                dct.update({'data': [float(time_avg_list[0]), float(time_avg_list[1])]})
+                dct.update({'data': list1})
                 time_data.append(dct)
                 dct = {"name": ver[i] + '_' + phone[j] + "_time_max"}
-                dct.update({'data': [float(time_max_list[0]), float(time_max_list[1])]})
+                dct.update({'data': list2})
                 time_data.append(dct)
                 context.update({'time_series': json.dumps(time_data)})
 
+                list3 = []
+                list4 = []
+                for k in range(0, reso_lenth):
+                    list3.append(cpu_avg_list[k])
+                    list4.append(cpu_max_list[k])
+
                 dct = {"name": ver[i] + '_' + phone[j] + "_cpu_avg"}
-                dct.update({'data': [float(cpu_avg_list[0]), float(cpu_avg_list[1])]})
+                dct.update({'data': list3})
                 cpu_data.append(dct)
                 dct = {"name": ver[i] + '_' + phone[j] + "_cpu_max"}
-                dct.update({'data': [float(cpu_max_list[0]), float(cpu_max_list[1])]})
+                dct.update({'data': list4})
                 cpu_data.append(dct)
                 context.update({'cpu_series': json.dumps(cpu_data)})
 
+                list5 = []
+                list6 = []
+                for k in range(0, reso_lenth):
+                    list5.append(mem_avg_list[k])
+                    list6.append(mem_max_list[k])
+
                 dct = {"name": ver[i] + '_' + phone[j] + "_mem_avg"}
-                dct.update({'data': [float(mem_avg_list[0]), float(mem_avg_list[1])]})
+                dct.update({'data': list5})
                 mem_data.append(dct)
                 dct = {"name": ver[i] + '_' + phone[j] + "_mem_max"}
-                dct.update({'data': [float(mem_max_list[0]), float(mem_max_list[1])]})
+                dct.update({'data': list6})
                 mem_data.append(dct)
                 context.update({'mem_series': json.dumps(mem_data)})
 
