@@ -318,9 +318,11 @@ class Performance(models.Model):
         versions = query_set.values("version")
         resolutions = query_set.values("resolution")
         platforms = query_set.values("platform")
+        phone = query_set.values("phone")
         ret = {'versions': set([v.get('version') for v in versions]),
                'resolutions': set([r.get('resolution') for r in resolutions]),
-               'platforms': set([p.get('platform') for p in platforms])
+               'platforms': set([p.get('platform') for p in platforms]),
+               'phone': set([ph.get('phone') for ph in phone])
                }
         return ret
 
