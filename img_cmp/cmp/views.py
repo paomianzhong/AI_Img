@@ -437,7 +437,7 @@ def performance(request,project):
                     time_avg_list.append(p.time_avg)
                     time_max_list.append(p.time_max)
                     cpu_avg_list.append(p.cpu_avg)
-                    cpu_max_list.append(p.time_max)
+                    cpu_max_list.append(p.cpu_max)
                     mem_avg_list.append(p.mem_avg)
                     mem_max_list.append(p.mem_max)
                 list1 = []
