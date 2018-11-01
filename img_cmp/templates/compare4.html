@@ -70,14 +70,12 @@
               <div class="th-inner">Time</div></th>
             <th data-field="dem1">
               <div class="th-inner">振铃效应</div></th>
-              <th data-field="dem1">
+              <th data-field="dem2">
               <div class="th-inner">块效应</div></th>
-              <th data-field="dem1">
-              <div class="th-inner">噪声</div></th>
-              <th data-field="dem1">
-              <div class="th-inner">模糊</div></th>
-              <th data-field="dem1">
-              <div class="th-inner">失真</div></th>
+              <th data-field="dem3">
+              <div class="th-inner">采集噪声</div></th>
+              <th data-field="dem4">
+              <div class="th-inner">模糊or失真</div></th>
           </tr>
           </thead>
         </table>
@@ -103,8 +101,6 @@
                 {{ form.dem3.label }}   {{ form.dem3.0 }}  {{ form.dem3.1 }}  {{form.dem3.2}}  {{ form.dem3.3 }}  {{ form.dem3.4 }}  {{ form.dem3.5 }}</p>
             <p><a href="#" data-toggle="tooltip" title="1-显著被模糊或锐化过度 2-轻微被模糊或锐化过度较 3-一般 4-部分更清晰 5-大都更清晰"><span class="glyphicon glyphicon-question-sign"></span></a>
                 {{ form.dem4.label }}   {{ form.dem4.0 }}  {{ form.dem4.1 }}  {{form.dem4.2}}  {{ form.dem4.3 }}  {{ form.dem4.4 }}  {{ form.dem4.5 }}</p>
-            <p><a href="#" data-toggle="tooltip" title="1-失真过度 2-较多失真 3-部分失真 4-较自然 5-自然"><span class="glyphicon glyphicon-question-sign"></span></a>
-                {{ form.dem5.label }}   {{ form.dem5.0 }}  {{ form.dem5.1 }}  {{form.dem5.2}}  {{ form.dem5.3 }}  {{ form.dem5.4 }}  {{ form.dem5.5 }}</p>
             <p><a href="#" data-toggle="tooltip"  title="评价"><span class="glyphicon glyphicon-question-sign"></span></a>
                 {{ form.comment.label }}   {{ form.comment }}</p>
           {% buttons %}

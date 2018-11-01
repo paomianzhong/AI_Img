@@ -106,7 +106,7 @@ class GradeForm3(forms.ModelForm):
 
     class Meta:
         model = Grade
-        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'dem5', 'img', 'comment']
+        fields = ['dem1', 'dem2', 'dem3', 'dem4', 'img', 'comment']
     img = forms.IntegerField(required=False, widget=forms.HiddenInput())
     dem1 = forms.IntegerField(required=True,
                               widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]),
@@ -116,11 +116,8 @@ class GradeForm3(forms.ModelForm):
                               label='块效应', initial=3)
     dem3 = forms.IntegerField(required=True,
                               widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]),
-                              label='噪声', initial=3)
+                              label='采集噪声', initial=3)
     dem4 = forms.IntegerField(required=True,
                               widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]),
-                              label='模糊', initial=3)
-    dem5 = forms.IntegerField(required=True,
-                              widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), ]),
-                              label='失真', initial=3)
+                              label='模糊or失真', initial=3)
     comment = forms.CharField(required=False, widget=forms.TextInput(), label='评价')
