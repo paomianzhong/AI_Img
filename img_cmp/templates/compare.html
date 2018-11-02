@@ -57,11 +57,14 @@
 </nav>
 {% endblock %}
 
-
 {% block content %}
+
 <!-- image -->
 {% if img2 %}
-<div id="demo" data-type="image-comparison" src1="{{ img2.s3_url }}" src2="{{ img1.s3_url }}"></div>
+<span id="demo" data-type="image-comparison" src1="{{ img2.s3_url }}" src2="{{ img1.s3_url }}"></span>
+<div style="float: right;margin-right: 70px;">
+    <span id="ssim" style="font-size: 20px;color: red;"></span>
+</div>
 {% endif %}
 
 <script>
@@ -167,6 +170,22 @@
             });
         }
     }
+</script>
+
+<script>
+    var p = document.getElementById("ssim");
+    var ul = "/api/ssim?img1="+{{ img1.id }}+"&img2="+{{ img2.id }};
+    $.ajax({
+        url: ul,
+        type: "get",
+        dataType: "json",
+        success: function(data){
+            p.innerHTML = "SSIM值: "+data.ssim;
+        },
+        error: function(data){
+            alert("error");
+        },
+    });
 </script>
 {% endblock %}
 {# Read the documentation for more information #}
