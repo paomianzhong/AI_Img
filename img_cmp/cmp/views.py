@@ -46,6 +46,27 @@ def compare(request, project):
 
         context['selected'] = selected1
         return render(request, 'compare.html', context)
+    elif project == 'Zhaidai_Project':
+        if request.GET:
+            reso = request.GET['category']
+            v1, v2 = request.GET['img1_version'], request.GET['img2_version']
+            num = request.GET['number'].zfill(2)
+            imgs = Image.objects.filter(project=project, version=v1, resolution=reso)
+            numbers = list(range(1, len(imgs)+1))
+            img1 = Image.objects.get(project=project, version=v1, resolution=reso, name__startswith=num)
+            img2 = Image.objects.get(project=project, version=v2, resolution=reso, name__startswith=num)
+            selected2 = [v1, v2, reso, num]
+            context.update({'img1': img1, 'img2': img2, 'numbers': numbers})
+
+        if request.POST:
+            data = {k: int(v) for k, v in request.POST.items() if k.startswith('dem')}
+            data['img'] = Image.objects.get(pk=request.POST['img_id'])
+            data['date'] = arrow.arrow.datetime.now()
+            data['comment'] = request.POST['comment']
+            Grade.objects.create(**data)
+
+        context['selected'] = selected2
+        return render(request, 'compare2.html', context)
     else:
         if request.GET:
             reso = request.GET['category']
